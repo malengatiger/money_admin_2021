@@ -1,0 +1,54 @@
+{
+  "project_info": {
+    "project_number": "189690056754",
+    "project_id": "money-platform-2021",
+    "storage_bucket": "money-platform-2021.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:189690056754:android:510d4d723f314d67b32c2b",
+        "android_client_info": {
+          "package_name": "com.boha.money_admin_2021"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "189690056754-3f8ho8emdcs11c2msjahpogaq78lvg9q.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.boha.money_admin_2021",
+            "certificate_hash": "d3c1a3cb683cf6b71485c0a33ed92d11bdde8638"
+          }
+        },
+        {
+          "client_id": "189690056754-s3ob0rl90flqa5h612qe8hq42dvqie3u.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCBIvXsDzqevU1qKdIE9ASH-Cbk31OcEuc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "189690056754-s3ob0rl90flqa5h612qe8hq42dvqie3u.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "189690056754-hh7pl3vpps816aci8chhuon2keuat3eo.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.boha.moneyAdmin2021"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
