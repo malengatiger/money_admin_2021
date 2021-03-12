@@ -5,6 +5,7 @@ import 'package:money_admin_2021/ui/intro/intro_main.dart';
 import 'package:money_library_2021/util/util.dart';
 
 void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
   runApp(MyApp());
   await Firebase.initializeApp();
   p('🔵 🔵 🔵 Firebase initialized ....');

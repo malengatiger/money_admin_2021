@@ -9,6 +9,7 @@ import 'package:money_library_2021/widgets/avatar.dart';
 import 'package:money_library_2021/widgets/round_number.dart';
 import 'package:page_transition/page_transition.dart';
 
+import 'agent_details.dart';
 import 'agent_editor.dart';
 
 class AgentList extends StatefulWidget {
@@ -76,15 +77,15 @@ class _AgentListState extends State<AgentList>
 
   _navigateToAgentDetails(Agent agent) {
     p("🚈 _navigateToAgentDetails ...");
-    // Navigator.push(
-    //     context,
-    //     PageTransition(
-    //         type: PageTransitionType.scale,
-    //         curve: Curves.easeInOut,
-    //         duration: Duration(seconds: 2),
-    //         child: AgentDetail(
-    //           agent: agent,
-    //         )));
+    Navigator.push(
+        context,
+        PageTransition(
+            type: PageTransitionType.scale,
+            curve: Curves.easeInOut,
+            duration: Duration(seconds: 2),
+            child: AgentDetail(
+              agent: agent,
+            )));
   }
 
   _navigateToAgentEditor({Agent agent}) {

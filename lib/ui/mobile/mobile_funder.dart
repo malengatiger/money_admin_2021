@@ -2,8 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:money_library_2021/bloc/agent_bloc.dart';
 import 'package:money_library_2021/models/agent.dart';
-import 'package:money_library_2021/models/balance.dart';
-import 'package:money_library_2021/models/balances.dart';
+import 'package:money_library_2021/models/stellar_account_bag.dart';
 import 'package:money_library_2021/util/functions.dart';
 import 'package:money_library_2021/util/image_handler/currency_icons.dart';
 import 'package:money_library_2021/util/snack.dart';
@@ -39,17 +38,14 @@ class _AgentFunderMobileState extends State<AgentFunderMobile>
     _getBalances();
   }
 
-  Balances currentBalances;
+  StellarAccountBag bag;
   _getBalances() async {
     setState(() {
       isBusy = true;
     });
-    currentBalances =
-        await agentBloc.getLocalBalances(widget.agent.stellarAccountId);
-    p("🔵 🔵 🔵 🔵 🔵 _AgentFunderMobileState: 🔵 getLocalBalances Balances: ${currentBalances.toJson()}");
-    currentBalances =
-        await agentBloc.getRemoteBalances(widget.agent.stellarAccountId);
-    p("🍎 🍎  🍎  🍎  🍎 _AgentFunderMobileState: 🔵 getRemoteBalances Balances: ${currentBalances.toJson()}");
+    bag = await agentBloc.getBalances(
+        accountId: widget.agent.stellarAccountId, refresh: true);
+    p("🔵 🔵 🔵 🔵 🔵 _AgentFunderMobileState: 🔵 getBalances Balances: ${bag.toJson()}");
     setState(() {
       isBusy = false;
     });
@@ -63,7 +59,7 @@ class _AgentFunderMobileState extends State<AgentFunderMobile>
 
   _sendMoneyToAgent() async {
     if (isBusy) return;
-    p('💧 Sending money to agent ....');
+    p('💧 ............... Sending money to agent ....>>>>>>>>>');
     if (amount == null || amount == 0.0) {
       AppSnackBar.showErrorSnackBar(
           scaffoldKey: _key, message: 'Please enter the amount');
@@ -76,7 +72,7 @@ class _AgentFunderMobileState extends State<AgentFunderMobile>
       lastTransaction = null;
     });
     try {
-      currentBalances = await agentBloc.sendMoneyToAgent(
+      bag = await agentBloc.sendMoneyToAgent(
           amount: amount.toString(),
           agent: widget.agent,
           assetCode: _selectedBalance.assetCode);
@@ -224,7 +220,7 @@ class _AgentFunderMobileState extends State<AgentFunderMobile>
               decoration:
                   BoxDecoration(boxShadow: customShadow, color: baseColor),
               child: BalancesScroller(
-                balances: currentBalances,
+                bag: bag,
                 direction: Axis.horizontal,
               ),
             ),
@@ -232,13 +228,13 @@ class _AgentFunderMobileState extends State<AgentFunderMobile>
           Positioned(
             left: 80,
             top: 60,
-            child: currentBalances == null
+            child: bag == null
                 ? Container()
                 : Center(
                     child: Row(
                       children: <Widget>[
                         CurrencyDropDown(
-                          balances: currentBalances,
+                          bag: bag,
                           listener: this,
                           showXLM: false,
                         ),

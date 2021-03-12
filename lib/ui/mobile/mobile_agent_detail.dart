@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:money_library_2021/bloc/agent_bloc.dart';
 import 'package:money_library_2021/models/agent.dart';
 import 'package:money_library_2021/models/anchor.dart';
-import 'package:money_library_2021/models/balances.dart';
 import 'package:money_library_2021/models/client.dart';
+import 'package:money_library_2021/models/stellar_account_bag.dart';
 import 'package:money_library_2021/util/functions.dart';
 import 'package:money_library_2021/util/image_handler/random_image.dart';
 import 'package:money_library_2021/util/prefs.dart';
@@ -12,6 +12,10 @@ import 'package:money_library_2021/widgets/agent_widgets.dart';
 import 'package:money_library_2021/widgets/avatar.dart';
 import 'package:money_library_2021/widgets/balances_scroller.dart';
 import 'package:money_library_2021/widgets/contact_widgets.dart';
+import 'package:page_transition/page_transition.dart';
+
+import '../agent_editor.dart';
+import '../funder.dart';
 
 class AgentDetailMobile extends StatefulWidget {
   final Agent agent;
@@ -23,8 +27,8 @@ class AgentDetailMobile extends StatefulWidget {
 
 class _AgentDetailMobileState extends State<AgentDetailMobile> {
   bool weAreInProduction = false;
-  List<Balances> balancesList = List();
-  Balances currentBalances;
+  List<StellarAccountBag> bags = [];
+  StellarAccountBag bag;
   List<Client> clients = [];
   String path;
   bool isBusy = false;
@@ -40,17 +44,41 @@ class _AgentDetailMobileState extends State<AgentDetailMobile> {
     weAreInProduction = await isProductionMode();
     anchorUser = await Prefs.getAnchorUser();
     path = RandomImage.getImagePath();
+    if (mounted) {
+      setState(() {
+        busy = true;
+      });
+    }
     clients = await agentBloc.getClients(
         agentId: widget.agent.agentId, refresh: false);
-    currentBalances =
-        await agentBloc.getLocalBalances(widget.agent.stellarAccountId);
+    bag = await agentBloc.getBalances(
+        accountId: widget.agent.stellarAccountId, refresh: false);
+    if (mounted) {
+      setState(() {
+        busy = false;
+      });
+    }
     if (mounted) {
       setState(() {});
     }
-    currentBalances =
-        await agentBloc.getRemoteBalances(widget.agent.stellarAccountId);
+  }
+
+  bool busy = false;
+  _refresh() async {
     if (mounted) {
-      setState(() {});
+      setState(() {
+        busy = true;
+      });
+    }
+    bag = await agentBloc.getBalances(
+        accountId: widget.agent.stellarAccountId, refresh: true);
+    agentBloc.getClients(agentId: widget.agent.agentId, refresh: true);
+    agentBloc.getBalances(
+        accountId: widget.agent.stellarAccountId, refresh: true);
+    if (mounted) {
+      setState(() {
+        busy = false;
+      });
     }
   }
 
@@ -84,15 +112,15 @@ class _AgentDetailMobileState extends State<AgentDetailMobile> {
                   color: Colors.black,
                 ),
                 onPressed: () {
-                  // Navigator.push(
-                  //     context,
-                  //     PageTransition(
-                  //         type: PageTransitionType.scale,
-                  //         curve: Curves.easeInOut,
-                  //         duration: Duration(seconds: 2),
-                  //         child: AgentFunder(
-                  //           agent: widget.agent,
-                  //         )));
+                  Navigator.push(
+                      context,
+                      PageTransition(
+                          type: PageTransitionType.scale,
+                          curve: Curves.easeInOut,
+                          duration: Duration(seconds: 2),
+                          child: AgentFunder(
+                            agent: widget.agent,
+                          )));
                 }),
             IconButton(
                 icon: Icon(
@@ -101,15 +129,15 @@ class _AgentDetailMobileState extends State<AgentDetailMobile> {
                 ),
                 onPressed: () {
                   assert(widget.agent != null);
-                  // Navigator.push(
-                  //     context,
-                  //     PageTransition(
-                  //         type: PageTransitionType.scale,
-                  //         curve: Curves.easeInOut,
-                  //         duration: Duration(seconds: 2),
-                  //         child: AgentEditor(
-                  //           agent: widget.agent,
-                  //         )));
+                  Navigator.push(
+                      context,
+                      PageTransition(
+                          type: PageTransitionType.scale,
+                          curve: Curves.easeInOut,
+                          duration: Duration(seconds: 2),
+                          child: AgentEditor(
+                            agent: widget.agent,
+                          )));
                 }),
             IconButton(
                 icon: Icon(
@@ -117,9 +145,7 @@ class _AgentDetailMobileState extends State<AgentDetailMobile> {
                   color: Colors.black,
                 ),
                 onPressed: () {
-                  agentBloc.getClients(
-                      agentId: widget.agent.agentId, refresh: true);
-                  agentBloc.getRemoteBalances(widget.agent.stellarAccountId);
+                  _refresh();
                 }),
             IconButton(
                 icon: Icon(
@@ -211,18 +237,18 @@ class _AgentDetailMobileState extends State<AgentDetailMobile> {
                     BoxDecoration(boxShadow: customShadow, color: baseColor),
                 child: Padding(
                   padding: const EdgeInsets.all(8.0),
-                  child: StreamBuilder<List<Balances>>(
+                  child: StreamBuilder<List<StellarAccountBag>>(
                       stream: agentBloc.balancesStream,
                       builder: (context, snapshot) {
-                        Balances mBal;
+                        StellarAccountBag mBal;
                         if (snapshot.hasData) {
                           p('👽 👽 👽 👽 balances delivered via stream ... 👽 👽 👽 ${snapshot.data}');
-                          balancesList = snapshot.data;
-                          mBal = balancesList.last;
+                          bags = snapshot.data;
+                          mBal = bags.last;
                         }
                         return Center(
                           child: BalancesScroller(
-                            balances: mBal,
+                            bag: mBal,
                             direction: Axis.horizontal,
                           ),
                         );
