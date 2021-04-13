@@ -36,6 +36,28 @@ class _FundDistributionState extends State<FundDistribution>
   StreamSubscription _sub;
   Anchor anchor;
 
+  @override
+  void initState() {
+    _controller = AnimationController(vsync: this);
+    super.initState();
+    initUniLinks();
+    _getBasicData();
+  }
+
+  static const mm = 'FundDistribution: 🌺 🌺 🌺 ';
+  var _key = GlobalKey<ScaffoldState>();
+  String authCode;
+  String paymentRequestURL;
+  var textController = TextEditingController();
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    _setAnimation();
+    _sub.cancel();
+    super.dispose();
+  }
+
   Future<Null> initUniLinks() async {
     p('$mm .............. listening to uniLinks stream');
     _sub = getLinksStream().listen((String link) {
@@ -58,43 +80,21 @@ class _FundDistributionState extends State<FundDistribution>
         p('$mm paymentStatus: $paymentStatus $mm');
       }
       _startFunding();
-      if (mounted) {
-        p('$mm .............. setting state .........');
-        setState(() {});
-      }
-      //todo - send this id and status to backend - write ZARK to user account
     });
     _sub.onDone(() {
       p('$mm sub onDone ....');
     });
   }
 
-  @override
-  void initState() {
-    _controller = AnimationController(vsync: this);
-    super.initState();
-    initUniLinks();
+  void _getBasicData() async {
+    anchor = await agentBloc.getAnchor();
     _getDistributionAccountBalances();
+    _getCurrency();
   }
 
-  static const mm = 'FundDistribution: 🌺 🌺 🌺 ';
-  var _key = GlobalKey<ScaffoldState>();
-  String authCode;
-  String paymentRequestURL;
-  Balance _selectedBalance;
-  var textController = TextEditingController();
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    _setAnimation();
-    _sub.cancel();
-    super.dispose();
-  }
-
-  String _getCurrency() {
-    if (anchor.anchorCurrency == null) anchor.anchorCurrency = "ZAR";
-    return anchor.anchorCurrency;
+  void _getCurrency() {
+    if (anchor.anchorCurrencyCode == null) anchor.anchorCurrencyCode = "ZAR";
+    if (anchor.assetCode == null) anchor.assetCode = "ZARK";
   }
 
   void _getPaymentRequestURL() async {
@@ -105,7 +105,7 @@ class _FundDistributionState extends State<FundDistribution>
     try {
       Map<String, dynamic> stitchResponseJSON = await NetUtil.get(
           apiRoute:
-              'createPaymentRequest?amount=$amount&currency=${_getCurrency()}&reference=${referenceController.text}');
+              'createPaymentRequest?amount=$amount&currency=${anchor.anchorCurrencyCode}&reference=${referenceController.text}');
       StitchResponse stitchResponse =
           StitchResponse.fromJson(stitchResponseJSON);
 
@@ -136,7 +136,9 @@ class _FundDistributionState extends State<FundDistribution>
 
   void startBrowser() async {
     p('$mm 🔆 🔆 🔆 🔆 🔆 🔆 🔆 🔆 starting browser with $paymentRequestURL 🔆 🔆 🔆 🔆');
-
+    setState(() {
+      busy = true;
+    });
     if (await canLaunch(paymentRequestURL)) {
       await launch(paymentRequestURL);
       p('🔆 🔆 🔆 🔆 🔵 🔵 🔵 🔵 🔵 🔵  browser launched with $paymentRequestURL 🔵 🔵');
@@ -152,6 +154,7 @@ class _FundDistributionState extends State<FundDistribution>
       text:
           '${(DateTime.now().millisecondsSinceEpoch / (1000 * 60 * 60)).toStringAsFixed(3)}');
 
+  bool fundingDone = false;
   _startFunding() async {
     p(mm + '_startFunding distribution account with $amount');
     setState(() {
@@ -159,15 +162,16 @@ class _FundDistributionState extends State<FundDistribution>
     });
     result =
         await NetUtil.get(apiRoute: 'fundDistributionAccount?amount=$amount');
+    fundingDone = true;
     p('🦠🦠🦠🦠🦠 fundDistributionAccount result: $result');
+    setState(() {
+      busy = false;
+    });
     AppSnackBar.showSnackBar(
         scaffoldKey: _key,
         message: result,
         textColor: Colors.yellow,
         backgroundColor: Colors.black);
-    setState(() {
-      busy = false;
-    });
   }
 
   String result = "";
@@ -177,7 +181,7 @@ class _FundDistributionState extends State<FundDistribution>
     setState(() {
       isBusy = true;
     });
-    anchor = await agentBloc.getAnchor();
+
     p("$mm 🔵 🔵 🔵 🔵 🔵 🔵 _getDistributionAccountBalances: Anchor: ${anchor.toJson()}");
     bag = await agentBloc.getBalances(
         accountId: anchor.distributionStellarAccount.accountId, refresh: true);
@@ -267,7 +271,33 @@ class _FundDistributionState extends State<FundDistribution>
               padding: const EdgeInsets.all(28.0),
               child: ListView(
                 children: <Widget>[
-                  SizedBox(height: 80),
+                  SizedBox(height: 20),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 64.0),
+                    child: Row(
+                      children: [
+                        Text(
+                          anchor == null ? "" : anchor.anchorCurrencyCode,
+                          style: Styles.blackBoldLarge,
+                        ),
+                        SizedBox(
+                          width: 12,
+                        ),
+                        Icon(
+                          Icons.arrow_forward,
+                          size: 32,
+                        ),
+                        SizedBox(
+                          width: 12,
+                        ),
+                        Text(
+                          anchor == null ? "" : anchor.assetCode,
+                          style: Styles.blackBoldLarge,
+                        ),
+                      ],
+                    ),
+                  ),
+                  SizedBox(height: 20),
                   Container(
                     decoration: BoxDecoration(
                         boxShadow: customShadow,
@@ -298,7 +328,7 @@ class _FundDistributionState extends State<FundDistribution>
                             onPressed: _getPaymentRequestURL,
                             child: Padding(
                               padding: const EdgeInsets.all(20.0),
-                              child: isBusy
+                              child: busy
                                   ? Container(
                                       width: 20,
                                       height: 20,
@@ -351,7 +381,6 @@ class _FundDistributionState extends State<FundDistribution>
 
   @override
   onChanged(Balance value) {
-    _selectedBalance = value;
     p('MobileFunder: 💚 💚 balance selected ${value.assetCode} ${value.balance}');
     setState(() {});
   }

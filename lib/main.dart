@@ -1,6 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart' as DotEnv;
+import 'package:google_fonts/google_fonts.dart';
 import 'package:money_admin_2021/ui/intro/intro_main.dart';
 import 'package:money_library_2021/util/util.dart';
 
@@ -21,6 +22,9 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         primarySwatch: Colors.pink,
+        textTheme: GoogleFonts.latoTextTheme(
+          Theme.of(context).textTheme,
+        ),
       ),
       home: IntroMain(),
     );
