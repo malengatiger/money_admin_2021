@@ -146,7 +146,7 @@ class _AgentListState extends State<AgentList>
           actions: <Widget>[
             IconButton(
                 icon: Icon(
-                  Icons.anchor,
+                  Icons.money,
                   color: Colors.black,
                 ),
                 onPressed: () {
