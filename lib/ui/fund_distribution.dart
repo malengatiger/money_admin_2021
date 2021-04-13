@@ -67,30 +67,7 @@ class _FundDistributionState extends State<FundDistribution>
     _sub.onDone(() {
       p('$mm sub onDone ....');
     });
-
-    // NOTE: Don't forget to call _sub.cancel() in dispose()
   }
-
-  // void _sendPaymentStatus() async {
-  //   p('$mm  sending PaymentStatus ... ');
-  //   var rec = StitchPaymentStatusRecord(
-  //       paymentId: paymentId,
-  //       stellarAccountId: "stellarAccountId",
-  //       amount: amtController.text,
-  //       status: paymentStatus,
-  //       date: DateTime.now().toIso8601String());
-  //
-  //   p('$mm sending StitchPaymentStatusRecord .... ${rec.toJson()}');
-  //   setState(() {
-  //     busy = true;
-  //   });
-  //   String stitchResponseJSON = await NetUtil.post(
-  //       apiRoute: 'addStablecoinToAccount', bag: rec.toJson());
-  //   p('$mm addStablecoinToAccount response: $stitchResponseJSON');
-  //   setState(() {
-  //     busy = false;
-  //   });
-  // }
 
   @override
   void initState() {
@@ -182,7 +159,12 @@ class _FundDistributionState extends State<FundDistribution>
     });
     result =
         await NetUtil.get(apiRoute: 'fundDistributionAccount?amount=$amount');
-    p('$result');
+    p('🦠🦠🦠🦠🦠 fundDistributionAccount result: $result');
+    AppSnackBar.showSnackBar(
+        scaffoldKey: _key,
+        message: result,
+        textColor: Colors.yellow,
+        backgroundColor: Colors.black);
     setState(() {
       busy = false;
     });
@@ -218,6 +200,14 @@ class _FundDistributionState extends State<FundDistribution>
       key: _key,
       backgroundColor: secondaryColor,
       appBar: AppBar(
+        leading: IconButton(
+            icon: Icon(
+              Icons.arrow_back,
+              color: Colors.black,
+            ),
+            onPressed: () {
+              Navigator.pop(context);
+            }),
         title: Text(
           'Distribution Account Funding',
           style: Styles.blackBoldSmall,
@@ -244,7 +234,7 @@ class _FundDistributionState extends State<FundDistribution>
                     style: Styles.blackBoldMedium,
                   ),
                   SizedBox(
-                    height: 20,
+                    height: 12,
                   ),
                   Padding(
                     padding: const EdgeInsets.only(left: 48.0, right: 48),
@@ -253,10 +243,20 @@ class _FundDistributionState extends State<FundDistribution>
                       style: Styles.greyLabelSmall,
                     ),
                   ),
+                  SizedBox(
+                    height: 24,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text(
+                      desc,
+                      style: Styles.blackSmall,
+                    ),
+                  ),
                 ],
               ),
             ),
-            preferredSize: Size.fromHeight(100)),
+            preferredSize: Size.fromHeight(180)),
       ),
       body: Stack(
         children: <Widget>[
@@ -357,6 +357,9 @@ class _FundDistributionState extends State<FundDistribution>
   }
 
   double amount;
+  var desc =
+      'This page facilitates the funding of an Anchor \'s distribution account. '
+      'It allows the administrator to transfer funds from a bank account in fiat currency and creates equivalent StableCoin in the distribution account';
   void _onAmountChanged(String value) {
     p('on amount changed: $value');
     setState(() {
