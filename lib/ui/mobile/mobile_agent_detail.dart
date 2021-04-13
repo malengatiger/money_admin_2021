@@ -242,7 +242,7 @@ class _AgentDetailMobileState extends State<AgentDetailMobile> {
                       builder: (context, snapshot) {
                         StellarAccountBag mBal;
                         if (snapshot.hasData) {
-                          p('👽 👽 👽 👽 balances delivered via stream ... 👽 👽 👽 ${snapshot.data}');
+                          p('👽 👽 👽 👽 balances delivered via stream ... 👽 👽 👽 ${snapshot.data.length} record(s)');
                           bags = snapshot.data;
                           mBal = bags.last;
                         }

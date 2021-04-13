@@ -150,9 +150,7 @@ class _LoginFormState extends State<LoginForm>
         isBusy = false;
       });
       AppSnackBar.showErrorSnackBar(
-          scaffoldKey: _key,
-          message: 'We have a problem $e',
-          actionLabel: 'Err');
+          scaffoldKey: _key, message: 'We have a problem $e', actionLabel: '');
     }
   }
 
@@ -162,129 +160,133 @@ class _LoginFormState extends State<LoginForm>
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: <Widget>[
-        ListView(
-          children: <Widget>[
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Card(
-                elevation: 1,
-                color: baseColor,
-                child: Padding(
-                  padding: const EdgeInsets.all(20.0),
-                  child: Column(
-                    children: <Widget>[
-                      SizedBox(
-                        height: 80,
-                      ),
-                      ScaleTransition(
-                        scale: titleAnimation,
-                        alignment: Alignment(0.0, 0.0),
-                        child: GestureDetector(
-                          onTap: () {
-                            titleController.reset();
-                            titleController.forward();
-                          },
-                          child: Row(
-                            children: <Widget>[
-                              Hero(
-                                tag: 'logo',
-                                child: Image.asset(
-                                  'assets/logo/logo.png',
-                                  width: 24,
-                                  height: 24,
-                                ),
-                              ),
-                              SizedBox(
-                                width: 16,
-                              ),
-                              Text(
-                                'Anchor Sign in',
-                                style: Styles.blackBoldMedium,
-                              ),
-                              SizedBox(
-                                width: 48,
-                              ),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.end,
-                                children: [
-                                  IconButton(
-                                      icon: Icon(Icons.close),
-                                      onPressed: () {
-                                        Navigator.pop(context);
-                                      })
-                                ],
-                              )
-                            ],
-                          ),
+    return Scaffold(
+      body: Stack(
+        key: _key,
+        children: <Widget>[
+          ListView(
+            children: <Widget>[
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Card(
+                  elevation: 1,
+                  color: baseColor,
+                  child: Padding(
+                    padding: const EdgeInsets.all(20.0),
+                    child: Column(
+                      children: <Widget>[
+                        SizedBox(
+                          height: 80,
                         ),
-                      ),
-                      SizedBox(
-                        height: 8,
-                      ),
-                      Text(dummy),
-                      SizedBox(
-                        height: 40,
-                      ),
-                      TextField(
-                        onChanged: _onEmailChanged,
-                        keyboardType: TextInputType.emailAddress,
-                        controller: emailCntr,
-                        style: Styles.blueBoldSmall,
-                        decoration: InputDecoration(
-                            hintText: 'Enter  email address',
-                            labelText: 'Email'),
-                      ),
-                      SizedBox(
-                        height: 12,
-                      ),
-                      TextField(
-                        onChanged: _onPasswordChanged,
-                        keyboardType: TextInputType.text,
-                        obscureText: true,
-                        controller: pswdCntr,
-                        decoration: InputDecoration(
-                            hintText: 'Enter password', labelText: 'Password'),
-                      ),
-                      SizedBox(
-                        height: 60,
-                      ),
-                      ScaleTransition(
-                        scale: btnAnimation,
-                        child: Container(
-                          height: 60,
-                          width: 300,
-                          decoration: BoxDecoration(
-                              boxShadow: customShadow,
-                              color: Colors.brown[100]),
-                          child: isBusy
-                              ? Center(
-                                  child: CircularProgressIndicator(),
-                                )
-                              : FlatButton(
-                                  onPressed: () {
-                                    p('💙 tapped to go logging in ...');
-                                    _signIn();
-                                  },
-                                  child: Text(
-                                    "Submit Credentials",
-                                    style: Styles.blackBoldSmall,
+                        ScaleTransition(
+                          scale: titleAnimation,
+                          alignment: Alignment(0.0, 0.0),
+                          child: GestureDetector(
+                            onTap: () {
+                              titleController.reset();
+                              titleController.forward();
+                            },
+                            child: Row(
+                              children: <Widget>[
+                                Hero(
+                                  tag: 'logo',
+                                  child: Image.asset(
+                                    'assets/logo/logo.png',
+                                    width: 24,
+                                    height: 24,
                                   ),
                                 ),
+                                SizedBox(
+                                  width: 16,
+                                ),
+                                Text(
+                                  'Anchor Sign in',
+                                  style: Styles.blackBoldMedium,
+                                ),
+                                SizedBox(
+                                  width: 48,
+                                ),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.end,
+                                  children: [
+                                    IconButton(
+                                        icon: Icon(Icons.close),
+                                        onPressed: () {
+                                          Navigator.pop(context);
+                                        })
+                                  ],
+                                )
+                              ],
+                            ),
+                          ),
                         ),
-                      ),
-                      SizedBox(
-                        height: 60,
-                      ),
-                    ],
+                        SizedBox(
+                          height: 8,
+                        ),
+                        Text(dummy),
+                        SizedBox(
+                          height: 40,
+                        ),
+                        TextField(
+                          onChanged: _onEmailChanged,
+                          keyboardType: TextInputType.emailAddress,
+                          controller: emailCntr,
+                          style: Styles.blueBoldSmall,
+                          decoration: InputDecoration(
+                              hintText: 'Enter  email address',
+                              labelText: 'Email'),
+                        ),
+                        SizedBox(
+                          height: 12,
+                        ),
+                        TextField(
+                          onChanged: _onPasswordChanged,
+                          keyboardType: TextInputType.text,
+                          obscureText: true,
+                          controller: pswdCntr,
+                          decoration: InputDecoration(
+                              hintText: 'Enter password',
+                              labelText: 'Password'),
+                        ),
+                        SizedBox(
+                          height: 60,
+                        ),
+                        ScaleTransition(
+                          scale: btnAnimation,
+                          child: Container(
+                            height: 60,
+                            width: 300,
+                            decoration: BoxDecoration(
+                                boxShadow: customShadow,
+                                color: Colors.brown[100]),
+                            child: isBusy
+                                ? Center(
+                                    child: CircularProgressIndicator(),
+                                  )
+                                : FlatButton(
+                                    onPressed: () {
+                                      p('💙 tapped to go logging in ...');
+                                      _signIn();
+                                    },
+                                    child: Text(
+                                      "Submit Credentials",
+                                      style: Styles.blackBoldSmall,
+                                    ),
+                                  ),
+                          ),
+                        ),
+                        SizedBox(
+                          height: 60,
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ),
-            ),
-          ],
-        )
-      ],
+            ],
+          )
+        ],
+      ),
     );
   }
 }

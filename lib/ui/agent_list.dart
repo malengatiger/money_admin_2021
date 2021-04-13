@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:money_admin_2021/ui/fund_distribution.dart';
 import 'package:money_library_2021/bloc/agent_bloc.dart';
 import 'package:money_library_2021/models/agent.dart';
 import 'package:money_library_2021/models/anchor.dart';
@@ -69,6 +70,9 @@ class _AgentListState extends State<AgentList>
     if (_anchor != null) {
       _agents = await agentBloc.getAgents(
           anchorId: _anchor.anchorId, refresh: refresh);
+      _agents.sort((a, b) => a.personalKYCFields
+          .getFullName()
+          .compareTo(b.personalKYCFields.getFullName()));
       setState(() {
         isBusy = false;
       });
@@ -102,121 +106,152 @@ class _AgentListState extends State<AgentList>
         ));
   }
 
+  _navigateToDistributionFunding() async {
+    p("🚈 🔆 🔆 _navigateToDistributionFunding ...");
+    Navigator.push(
+        context,
+        PageTransition(
+          type: PageTransitionType.scale,
+          alignment: Alignment.centerRight,
+          duration: Duration(seconds: 1),
+          child: FundDistribution(),
+        ));
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: secondaryColor,
-      appBar: AppBar(
+    return SafeArea(
+      child: Scaffold(
         backgroundColor: secondaryColor,
-        bottom: PreferredSize(
-            child: Padding(
-              padding: const EdgeInsets.only(left: 20.0),
-              child: Column(
-                children: <Widget>[
-                  Row(
-                    children: <Widget>[
-                      Text(
-                        _anchor == null ? '' : _anchor.name,
-                        style: Styles.blackBoldMedium,
-                      ),
-                    ],
-                  ),
-                ],
+        appBar: AppBar(
+          backgroundColor: secondaryColor,
+          bottom: PreferredSize(
+              child: Padding(
+                padding: const EdgeInsets.only(left: 20.0),
+                child: Column(
+                  children: <Widget>[
+                    Row(
+                      children: <Widget>[
+                        Text(
+                          _anchor == null ? '' : _anchor.name,
+                          style: Styles.blackBoldMedium,
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
               ),
-            ),
-            preferredSize: Size.fromHeight(60)),
-        elevation: 0,
-        actions: <Widget>[
-          IconButton(
-              icon: Icon(Icons.refresh),
-              onPressed: () {
-                agentBloc.getAgents(anchorId: _anchor.anchorId, refresh: true);
-              }),
-          IconButton(
-              icon: Icon(Icons.add),
-              onPressed: () {
-                _navigateToAgentEditor();
-              }),
-        ],
-        title: Text(
-          "Agent List",
-          style: Styles.blackSmall,
+              preferredSize: Size.fromHeight(60)),
+          elevation: 0,
+          actions: <Widget>[
+            IconButton(
+                icon: Icon(
+                  Icons.anchor,
+                  color: Colors.black,
+                ),
+                onPressed: () {
+                  _navigateToDistributionFunding();
+                }),
+            IconButton(
+                icon: Icon(Icons.refresh),
+                onPressed: () {
+                  agentBloc.getAgents(
+                      anchorId: _anchor.anchorId, refresh: true);
+                }),
+            IconButton(
+                icon: Icon(Icons.add),
+                onPressed: () {
+                  _navigateToAgentEditor();
+                }),
+          ],
+          title: Text(
+            "Agent List",
+            style: Styles.blackSmall,
+          ),
         ),
-      ),
-      body: Stack(
-        children: <Widget>[
-          Padding(
-            padding: const EdgeInsets.only(top: 48.0),
-            child: StreamBuilder<List<Agent>>(
-                stream: agentBloc.agentStream,
-                builder: (context, snapshot) {
-                  if (snapshot.hasData) {
-                    _agents = snapshot.data;
-                  }
+        body: Stack(
+          children: <Widget>[
+            Padding(
+              padding: const EdgeInsets.only(top: 48.0),
+              child: StreamBuilder<List<Agent>>(
+                  stream: agentBloc.agentStream,
+                  builder: (context, snapshot) {
+                    if (snapshot.hasData) {
+                      _agents = snapshot.data;
+                      _agents.sort((a, b) => a.personalKYCFields
+                          .getFullName()
+                          .compareTo(b.personalKYCFields.getFullName()));
+                    }
 
-                  return ListView.builder(
-                      itemCount: _agents.length,
-                      itemBuilder: (context, index) {
-                        var mAgent = _agents.elementAt(index);
-                        return Padding(
-                          padding: const EdgeInsets.only(
-                              left: 20.0, right: 20, top: 12),
-                          child: GestureDetector(
-                            onTap: () {
-                              _navigateToAgentDetails(mAgent);
-                            },
-                            child: Container(
-                              height: 60,
-                              decoration: BoxDecoration(
-                                  boxShadow: customShadow, color: baseColor),
-                              child: ListTile(
-                                leading: RoundAvatar(
-                                  path: mAgent.url == null
-                                      ? 'assets/logo/logo.png'
-                                      : mAgent.url,
-                                  radius: mAgent.url == null ? 20 : 48,
-                                  fromNetwork:
-                                      mAgent.url == null ? false : true,
-                                ),
-                                title: Text(
-                                  _agents
-                                      .elementAt(index)
-                                      .personalKYCFields
-                                      .getFullName(),
-                                  style: Styles.blackSmall,
+                    return ListView.builder(
+                        itemCount: _agents.length,
+                        itemBuilder: (context, index) {
+                          var mAgent = _agents.elementAt(index);
+                          return Padding(
+                            padding: const EdgeInsets.only(
+                                left: 20.0, right: 20, top: 12),
+                            child: GestureDetector(
+                              onTap: () {
+                                _navigateToAgentDetails(mAgent);
+                              },
+                              child: Container(
+                                height: 60,
+                                decoration: BoxDecoration(
+                                    boxShadow: customShadow, color: baseColor),
+                                child: ListTile(
+                                  leading: RoundAvatar(
+                                    path: mAgent.url == null
+                                        ? 'assets/logo/logo.png'
+                                        : mAgent.url,
+                                    radius: mAgent.url == null ? 20 : 48,
+                                    fromNetwork:
+                                        mAgent.url == null ? false : true,
+                                  ),
+                                  title: Text(
+                                    _agents
+                                        .elementAt(index)
+                                        .personalKYCFields
+                                        .getFullName(),
+                                    style: Styles.blackSmall,
+                                  ),
                                 ),
                               ),
                             ),
-                          ),
-                        );
-                      });
-                }),
-          ),
-          Positioned(
-              right: 16,
-              top: 8,
-              child: RoundNumberWidget(
-                number: _agents.length,
-                radius: 60,
-                margin: 12,
-                marginColor: Colors.blue[200],
-                mainColor: Colors.pink[200],
-                textStyle: Styles.whiteBoldSmall,
-              )),
-          isBusy
-              ? Positioned(
-                  left: 20,
-                  top: 8,
-                  child: Container(
-                    width: 20,
-                    height: 20,
-                    child: CircularProgressIndicator(
-                      backgroundColor: Colors.black,
-                    ),
+                          );
+                        });
+                  }),
+            ),
+            Positioned(
+                right: 16,
+                top: 8,
+                child: GestureDetector(
+                  onTap: () {
+                    _refresh(true);
+                  },
+                  child: RoundNumberWidget(
+                    number: _agents.length,
+                    radius: 60,
+                    margin: 12,
+                    marginColor: Colors.blue[200],
+                    mainColor: Colors.pink[200],
+                    textStyle: Styles.whiteBoldSmall,
                   ),
-                )
-              : Container(),
-        ],
+                )),
+            isBusy
+                ? Positioned(
+                    left: 20,
+                    top: 8,
+                    child: Container(
+                      width: 20,
+                      height: 20,
+                      child: CircularProgressIndicator(
+                        backgroundColor: Colors.black,
+                      ),
+                    ),
+                  )
+                : Container(),
+          ],
+        ),
       ),
     );
   }

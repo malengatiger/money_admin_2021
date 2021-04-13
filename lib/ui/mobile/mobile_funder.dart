@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:money_library_2021/bloc/agent_bloc.dart';
@@ -72,6 +73,7 @@ class _AgentFunderMobileState extends State<AgentFunderMobile>
       lastTransaction = null;
     });
     try {
+      //todo - hide keyboard
       bag = await agentBloc.sendMoneyToAgent(
           amount: amount.toString(),
           agent: widget.agent,
@@ -142,91 +144,91 @@ class _AgentFunderMobileState extends State<AgentFunderMobile>
       ),
       body: Stack(
         children: <Widget>[
-          Padding(
-            padding: const EdgeInsets.only(
-                top: 12.0, bottom: 60, left: 16, right: 16),
-            child: Container(
-              decoration:
-                  BoxDecoration(boxShadow: customShadow, color: secondaryColor),
-              child: Padding(
-                padding: const EdgeInsets.all(28.0),
-                child: ListView(
-                  children: <Widget>[
-                    SizedBox(height: 80),
-                    Container(
-                      decoration: BoxDecoration(
-                          boxShadow: customShadow,
-                          color: secondaryColor,
-                          borderRadius: BorderRadius.all(Radius.circular(20))),
-                      child: Padding(
-                        padding: const EdgeInsets.only(
-                            left: 28, right: 28, top: 20, bottom: 20),
-                        child: TextField(
-                          controller: textController,
-                          keyboardType: TextInputType.number,
-                          maxLength: 20,
-                          style: Styles.blackBoldMedium,
-                          decoration: InputDecoration(
-                              border: OutlineInputBorder(),
-                              hintText: '0000.00',
-                              labelText: 'Amount'),
-                          onChanged: _onAmountChanged,
-                        ),
+          Container(
+            decoration:
+                BoxDecoration(boxShadow: customShadow, color: secondaryColor),
+            child: Padding(
+              padding: const EdgeInsets.all(28.0),
+              child: ListView(
+                children: <Widget>[
+                  SizedBox(height: 80),
+                  Container(
+                    decoration: BoxDecoration(
+                        boxShadow: customShadow,
+                        color: secondaryColor,
+                        borderRadius: BorderRadius.all(Radius.circular(20))),
+                    child: Padding(
+                      padding: const EdgeInsets.only(
+                          left: 28, right: 28, top: 20, bottom: 20),
+                      child: TextField(
+                        controller: textController,
+                        keyboardType: TextInputType.number,
+                        maxLength: 20,
+                        style: Styles.blackBoldMedium,
+                        decoration: InputDecoration(
+                            border: OutlineInputBorder(),
+                            hintText: '0000.00',
+                            labelText: 'Amount'),
+                        onChanged: _onAmountChanged,
                       ),
                     ),
-                    SizedBox(height: 20),
-                    Padding(
-                      padding: const EdgeInsets.all(28.0),
-                      child: _selectedBalance == null
-                          ? Container()
-                          : RaisedButton(
-                              onPressed: _sendMoneyToAgent,
-                              elevation: isBusy ? 0 : 8,
-                              color: isBusy
-                                  ? Colors.pink[600]
-                                  : Colors.indigo[300],
-                              child: Padding(
-                                padding: const EdgeInsets.all(20.0),
-                                child: isBusy
-                                    ? CircularProgressIndicator(
-                                        backgroundColor: Colors.white,
-                                      )
-                                    : Text(
-                                        'Send Agent Funds',
-                                        style: Styles.whiteSmall,
-                                      ),
-                              ),
+                  ),
+                  SizedBox(height: 20),
+                  Padding(
+                    padding: const EdgeInsets.all(28.0),
+                    child: _selectedBalance == null
+                        ? Container()
+                        : RaisedButton(
+                            onPressed: _sendMoneyToAgent,
+                            elevation: isBusy ? 0 : 8,
+                            color:
+                                isBusy ? Colors.pink[600] : Colors.indigo[300],
+                            child: Padding(
+                              padding: const EdgeInsets.all(20.0),
+                              child: isBusy
+                                  ? CircularProgressIndicator(
+                                      backgroundColor: Colors.white,
+                                    )
+                                  : Text(
+                                      'Send Agent Funds',
+                                      style: Styles.whiteSmall,
+                                    ),
                             ),
-                    ),
+                          ),
+                  ),
 //                    SizedBox(height: 8),
 //                    SizedBox(height: 20),
-                    lastTransaction == null
-                        ? Container()
-                        : Text(
-                            lastTransaction,
-                            style: Styles.blackSmall,
-                          ),
-                  ],
-                ),
+                  lastTransaction == null
+                      ? Container()
+                      : Text(
+                          lastTransaction,
+                          style: Styles.blackSmall,
+                        ),
+                ],
               ),
             ),
           ),
           Positioned(
             left: 60,
             bottom: 20,
-            child: Container(
-              height: 80,
-              width: 300,
-              decoration:
-                  BoxDecoration(boxShadow: customShadow, color: baseColor),
-              child: BalancesScroller(
-                bag: bag,
-                direction: Axis.horizontal,
-              ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Container(
+                  height: 60,
+                  width: 240,
+                  decoration:
+                      BoxDecoration(boxShadow: customShadow, color: baseColor),
+                  child: BalancesScroller(
+                    bag: bag,
+                    direction: Axis.horizontal,
+                  ),
+                ),
+              ],
             ),
           ),
           Positioned(
-            left: 80,
+            left: 60,
             top: 60,
             child: bag == null
                 ? Container()
