@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:money_admin_2021/ui/mobile/anchor_balances_mobile.dart';
 import 'package:money_library_2021/api/net.dart';
 import 'package:money_library_2021/bloc/agent_bloc.dart';
 import 'package:money_library_2021/models/anchor.dart';
@@ -13,15 +14,16 @@ import 'package:money_library_2021/widgets/balances_scroller.dart';
 import 'package:money_library_2021/widgets/currency_dropdown.dart';
 import 'package:oauth2_client/google_oauth2_client.dart';
 import 'package:oauth2_client/oauth2_helper.dart';
+import 'package:page_transition/page_transition.dart';
 import 'package:uni_links/uni_links.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-class FundDistribution extends StatefulWidget {
+class FundDistributionMobile extends StatefulWidget {
   @override
-  _FundDistributionState createState() => _FundDistributionState();
+  _FundDistributionMobileState createState() => _FundDistributionMobileState();
 }
 
-class _FundDistributionState extends State<FundDistribution>
+class _FundDistributionMobileState extends State<FundDistributionMobile>
     with SingleTickerProviderStateMixin
     implements CurrencyDropDownListener {
   AnimationController _controller;
@@ -67,7 +69,6 @@ class _FundDistributionState extends State<FundDistribution>
     });
     _sub.onData((data) {
       p('$mm LinksStream subscription onData fired: $data');
-      // https://blackox-anchor-cgquhgy5vq-ew.a.run.app/anchor/api/v1/receiveStitchPaymentRequestResponse?id=cGF5cmVxLzRjMmU3NmRkLTg2ZWUtNGM5NC1iZmNhLWIwMWQ1ZDlhMzRhZg%3d%3d&status=complete
       String mData = data as String;
       int i = mData.indexOf("=");
       int j = mData.indexOf("&");
@@ -149,24 +150,32 @@ class _FundDistributionState extends State<FundDistribution>
 
   String paymentStatus, paymentId;
 
-  var amtController = TextEditingController(text: "123.00");
+  var amtController = TextEditingController(text: "0.00");
   var referenceController = TextEditingController(
       text:
           '${(DateTime.now().millisecondsSinceEpoch / (1000 * 60 * 60)).toStringAsFixed(3)}');
 
+  List<Balance> balances = [];
   bool fundingDone = false;
   _startFunding() async {
     p(mm + '_startFunding distribution account with $amount');
     setState(() {
       busy = true;
     });
-    result =
+    List<dynamic> list =
         await NetUtil.get(apiRoute: 'fundDistributionAccount?amount=$amount');
+    balances.clear();
+    list.forEach((element) {
+      balances.add(Balance.fromJson(element));
+    });
+
     fundingDone = true;
-    p('🦠🦠🦠🦠🦠 fundDistributionAccount result: $result');
+    p('🦠🦠🦠🦠🦠 fundDistributionAccount result, should be list of balances: $result');
     setState(() {
+      amtController.text = "";
       busy = false;
     });
+    _navigateToAnchorBalances();
     AppSnackBar.showSnackBar(
         scaffoldKey: _key,
         message: result,
@@ -195,6 +204,18 @@ class _FundDistributionState extends State<FundDistribution>
     _controller =
         AnimationController(vsync: this, duration: Duration(seconds: 2));
     animation = Tween(begin: 0.0, end: 1.0).animate(_controller);
+  }
+
+  _navigateToAnchorBalances() async {
+    p("🚈 🔆 🔆 _navigateToAnchorBalances ...");
+    Navigator.push(
+        context,
+        PageTransition(
+          type: PageTransitionType.scale,
+          alignment: Alignment.centerRight,
+          duration: Duration(seconds: 1),
+          child: AnchorBalancesMobile(balances: balances),
+        ));
   }
 
   @override
@@ -244,7 +265,7 @@ class _FundDistributionState extends State<FundDistribution>
                     padding: const EdgeInsets.only(left: 48.0, right: 48),
                     child: Text(
                       bag == null ? '' : bag.accountId,
-                      style: Styles.greyLabelSmall,
+                      style: Styles.greyLabelTiny,
                     ),
                   ),
                   SizedBox(
@@ -337,8 +358,8 @@ class _FundDistributionState extends State<FundDistribution>
                                       ),
                                     )
                                   : Text(
-                                      'Submit Funds',
-                                      style: Styles.whiteSmall,
+                                      'Create StableCoin',
+                                      style: Styles.whiteBoldSmall,
                                     ),
                             ),
                           ),

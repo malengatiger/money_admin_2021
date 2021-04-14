@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:money_admin_2021/ui/fund_distribution.dart';
+import 'package:money_admin_2021/ui/mobile/fund_distribution.dart';
 import 'package:money_library_2021/bloc/agent_bloc.dart';
 import 'package:money_library_2021/models/agent.dart';
 import 'package:money_library_2021/models/anchor.dart';
@@ -114,7 +114,7 @@ class _AgentListState extends State<AgentList>
           type: PageTransitionType.scale,
           alignment: Alignment.centerRight,
           duration: Duration(seconds: 1),
-          child: FundDistribution(),
+          child: FundDistributionMobile(),
         ));
   }
 
