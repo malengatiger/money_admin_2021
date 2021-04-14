@@ -264,7 +264,7 @@ class _FundDistributionMobileState extends State<FundDistributionMobile>
                   Padding(
                     padding: const EdgeInsets.only(left: 48.0, right: 48),
                     child: Text(
-                      bag == null ? '' : bag.accountId,
+                      bag == null ? 'Assets' : bag.accountId,
                       style: Styles.greyLabelTiny,
                     ),
                   ),

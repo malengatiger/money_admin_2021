@@ -112,7 +112,7 @@ class _AgentFunderMobileState extends State<AgentFunderMobile>
       appBar: AppBar(
         title: Text(
           'Agent Funding',
-          style: Styles.whiteSmall,
+          style: Styles.blackSmall,
         ),
         actions: [
           IconButton(
@@ -135,7 +135,7 @@ class _AgentFunderMobileState extends State<AgentFunderMobile>
                     widget.agent == null
                         ? ''
                         : widget.agent.personalKYCFields.getFullName(),
-                    style: Styles.blackBoldSmall,
+                    style: Styles.blackBoldMedium,
                   ),
                 ],
               ),
@@ -209,14 +209,14 @@ class _AgentFunderMobileState extends State<AgentFunderMobile>
             ),
           ),
           Positioned(
-            left: 60,
+            left: 0,
             bottom: 20,
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Container(
                   height: 60,
-                  width: 240,
+                  width: 400,
                   decoration:
                       BoxDecoration(boxShadow: customShadow, color: baseColor),
                   child: BalancesScroller(
