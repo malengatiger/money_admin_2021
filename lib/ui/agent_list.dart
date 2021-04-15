@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart' as DotEnv;
+import 'package:money_admin_2021/fake_agent_images.dart';
 import 'package:money_admin_2021/ui/mobile/fund_distribution.dart';
 import 'package:money_library_2021/bloc/agent_bloc.dart';
 import 'package:money_library_2021/models/agent.dart';
@@ -31,12 +33,24 @@ class _AgentListState extends State<AgentList>
     _setProductionStatus();
     _setAnimation();
     _refresh(false);
+    _fakeImages();
   }
 
   @override
   void dispose() {
     animController.dispose();
     super.dispose();
+  }
+
+  void _fakeImages() async {
+    p('💧💧💧💧💧💧💧💧 is this part of the plan happening ?????');
+    var status = DotEnv.env['status'];
+    if (status == 'dev') {
+      p('💧💧💧💧💧💧💧💧 will kick off fake images ... Status: $status');
+      await FakeImages.start();
+    } else {
+      p(' 😡 😡 😡 Status is not dev, wtf?  😡 😡 😡 status: $status');
+    }
   }
 
   _setProductionStatus() async {

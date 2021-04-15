@@ -1,11 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:introduction_screen/introduction_screen.dart';
+import 'package:money_admin_2021/ui/dashboard/dashboard_main.dart';
 import 'package:money_library_2021/models/anchor.dart';
 import 'package:money_library_2021/util/functions.dart';
 import 'package:page_transition/page_transition.dart';
 
-import '../agent_list.dart';
 import '../login.dart';
 
 class IntroTablet extends StatefulWidget {
@@ -205,7 +205,7 @@ class _IntroTabletState extends State<IntroTablet>
               type: PageTransitionType.scale,
               alignment: Alignment.topLeft,
               duration: Duration(seconds: 1),
-              child: AgentList()));
+              child: DashboardMain()));
     }
   }
 

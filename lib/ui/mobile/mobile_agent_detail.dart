@@ -197,6 +197,9 @@ class _AgentDetailMobileState extends State<AgentDetailMobile> {
                     PhoneWidget(
                       phoneNumber: widget.agent.personalKYCFields.mobileNumber,
                     ),
+                    SizedBox(
+                      height: 40,
+                    ),
                     GestureDetector(
                       onTap: () {
                         p('🔆 🔆 Refreshing clients .... ');
@@ -218,7 +221,7 @@ class _AgentDetailMobileState extends State<AgentDetailMobile> {
                 padding: const EdgeInsets.all(12.0),
                 child: RoundAvatar(
                     path: getPath(),
-                    radius: 120,
+                    radius: 100,
                     fromNetwork: weAreInProduction),
               ),
             ),

@@ -182,12 +182,16 @@ class _AgentFunderMobileState extends State<AgentFunderMobile>
                             onPressed: _sendMoneyToAgent,
                             elevation: isBusy ? 0 : 8,
                             color:
-                                isBusy ? Colors.pink[600] : Colors.indigo[300],
+                                isBusy ? Colors.pink[400] : Colors.indigo[300],
                             child: Padding(
                               padding: const EdgeInsets.all(20.0),
                               child: isBusy
-                                  ? CircularProgressIndicator(
-                                      backgroundColor: Colors.white,
+                                  ? Container(
+                                      width: 20,
+                                      height: 20,
+                                      child: CircularProgressIndicator(
+                                        backgroundColor: Colors.white,
+                                      ),
                                     )
                                   : Text(
                                       'Send Agent Funds',
@@ -215,7 +219,7 @@ class _AgentFunderMobileState extends State<AgentFunderMobile>
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Container(
-                  height: 60,
+                  height: 40,
                   width: 400,
                   decoration:
                       BoxDecoration(boxShadow: customShadow, color: baseColor),
@@ -229,7 +233,7 @@ class _AgentFunderMobileState extends State<AgentFunderMobile>
           ),
           Positioned(
             left: 60,
-            top: 60,
+            top: 40,
             child: bag == null
                 ? Container()
                 : Center(

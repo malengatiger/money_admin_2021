@@ -1,13 +1,13 @@
 # This is a generated file; do not edit or check into version control.
-cloud_firestore=/Users/aubs/.pub-cache/hosted/pub.dartlang.org/cloud_firestore-1.0.1/
-cloud_firestore_web=/Users/aubs/.pub-cache/hosted/pub.dartlang.org/cloud_firestore_web-1.0.1/
+cloud_firestore=/Users/aubs/.pub-cache/hosted/pub.dartlang.org/cloud_firestore-1.0.5/
+cloud_firestore_web=/Users/aubs/.pub-cache/hosted/pub.dartlang.org/cloud_firestore_web-1.0.5/
 file_picker=/Users/aubs/.pub-cache/hosted/pub.dartlang.org/file_picker-3.0.0/
-firebase_auth=/Users/aubs/.pub-cache/hosted/pub.dartlang.org/firebase_auth-1.0.1/
-firebase_auth_web=/Users/aubs/.pub-cache/hosted/pub.dartlang.org/firebase_auth_web-1.0.2/
-firebase_core=/Users/aubs/.pub-cache/hosted/pub.dartlang.org/firebase_core-1.0.1/
-firebase_core_web=/Users/aubs/.pub-cache/hosted/pub.dartlang.org/firebase_core_web-1.0.1/
-firebase_messaging=/Users/aubs/.pub-cache/hosted/pub.dartlang.org/firebase_messaging-9.0.0/
-firebase_messaging_web=/Users/aubs/.pub-cache/hosted/pub.dartlang.org/firebase_messaging_web-1.0.1/
+firebase_auth=/Users/aubs/.pub-cache/hosted/pub.dartlang.org/firebase_auth-1.1.0/
+firebase_auth_web=/Users/aubs/.pub-cache/hosted/pub.dartlang.org/firebase_auth_web-1.0.6/
+firebase_core=/Users/aubs/.pub-cache/hosted/pub.dartlang.org/firebase_core-1.0.3/
+firebase_core_web=/Users/aubs/.pub-cache/hosted/pub.dartlang.org/firebase_core_web-1.0.2/
+firebase_messaging=/Users/aubs/.pub-cache/hosted/pub.dartlang.org/firebase_messaging-9.1.1/
+firebase_messaging_web=/Users/aubs/.pub-cache/hosted/pub.dartlang.org/firebase_messaging_web-1.0.4/
 flutter_plugin_android_lifecycle=/Users/aubs/.pub-cache/hosted/pub.dartlang.org/flutter_plugin_android_lifecycle-2.0.0/
 flutter_secure_storage=/Users/aubs/.pub-cache/hosted/pub.dartlang.org/flutter_secure_storage-4.1.0/
 flutter_web_auth=/Users/aubs/.pub-cache/hosted/pub.dartlang.org/flutter_web_auth-0.3.0/

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:money_admin_2021/ui/dashboard/dashboard_main.dart';
 import 'package:money_library_2021/models/anchor.dart';
 import 'package:money_library_2021/util/functions.dart';
 import 'package:money_library_2021/util/prefs.dart';
@@ -6,7 +7,6 @@ import 'package:money_library_2021/util/util.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:responsive_builder/responsive_builder.dart';
 
-import '../agent_list.dart';
 import 'intro_mobile.dart';
 import 'intro_tablet.dart';
 
@@ -47,7 +47,7 @@ class _IntroMainState extends State<IntroMain> {
               type: PageTransitionType.scale,
               alignment: Alignment.topLeft,
               duration: Duration(seconds: 1),
-              child: AgentList()));
+              child: DashboardMain()));
     } else {
       p('IntroMain: 🎽 🎽 🎽 Checking the user:  🎽 User is NULL');
     }

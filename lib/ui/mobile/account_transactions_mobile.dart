@@ -105,7 +105,7 @@ class _AccountTransactionsMobileState extends State<AccountTransactionsMobile>
                             var bal =
                                 stellarAccountBag.balances.elementAt(index);
                             return Card(
-                              elevation: 4,
+                              elevation: 1,
                               child: ListTile(
                                 leading: Image.asset(
                                   CurrencyIcons.getCurrencyImagePath(
@@ -124,7 +124,7 @@ class _AccountTransactionsMobileState extends State<AccountTransactionsMobile>
                                       width: 8,
                                     ),
                                     Text(
-                                      bal.balance,
+                                      getFormattedAmount(bal.balance, context),
                                       style: Styles.blackBoldSmall,
                                     )
                                   ],

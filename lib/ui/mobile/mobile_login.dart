@@ -1,13 +1,12 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart' as DotEnv;
+import 'package:money_admin_2021/ui/dashboard/dashboard_main.dart';
 import 'package:money_library_2021/api/auth.dart';
 import 'package:money_library_2021/util/functions.dart';
 import 'package:money_library_2021/util/snack.dart';
 import 'package:money_library_2021/util/util.dart';
 import 'package:page_transition/page_transition.dart';
-
-import '../agent_list.dart';
 
 class LoginMobile extends StatefulWidget {
   @override
@@ -143,7 +142,7 @@ class _LoginFormState extends State<LoginForm>
           PageTransition(
               type: PageTransitionType.scale,
               alignment: Alignment.bottomCenter,
-              child: AgentList()));
+              child: DashboardMain()));
     } catch (e) {
       print(e);
       setState(() {
