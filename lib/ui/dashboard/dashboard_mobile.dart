@@ -1,15 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:money_admin_2021/ui/agent_list.dart';
+import 'package:money_admin_2021/ui/chart/payment_chart.dart';
+import 'package:money_admin_2021/ui/chart/transaction_chart.dart';
+import 'package:money_admin_2021/ui/mobile/account_transactions_mobile.dart';
 import 'package:money_library_2021/bloc/agent_bloc.dart';
 import 'package:money_library_2021/models/agent.dart';
 import 'package:money_library_2021/models/anchor.dart';
 import 'package:money_library_2021/models/payment_dto.dart';
 import 'package:money_library_2021/models/stellar_account_bag.dart';
 import 'package:money_library_2021/models/transaction_dto.dart';
-import 'package:money_library_2021/ui/charts/payments_line_chart.dart';
 import 'package:money_library_2021/util/functions.dart';
 import 'package:money_library_2021/util/prefs.dart';
 import 'package:money_library_2021/util/theme.dart';
 import 'package:money_library_2021/util/util.dart';
+import 'package:page_transition/page_transition.dart';
 
 class DashboardMobile extends StatefulWidget {
   @override
@@ -64,6 +68,7 @@ class _DashboardMobileState extends State<DashboardMobile>
     setState(() {
       isBusy = true;
     });
+    if (agentBloc == null) agentBloc = AgentBloc();
     _agents = await agentBloc.getAgents(
         anchorId: anchor.anchorId, refresh: forceRefresh);
     _payments = await agentBloc.getPayments(
@@ -76,7 +81,7 @@ class _DashboardMobileState extends State<DashboardMobile>
         accountId: anchor.distributionStellarAccount.accountId,
         refresh: forceRefresh);
     p('$mm Finished getting a lot of data ....  🍎 🍎 '
-        'payments: ${_payments.length}  🍎 balances: ${bag.balances.length}');
+        'payments: ${_payments.length}  🍎 balances: ${bag.balances.length}  🍎 transactions: ${_transactions.length}');
     setState(() {
       isBusy = false;
     });
@@ -171,7 +176,7 @@ class _DashboardMobileState extends State<DashboardMobile>
                     child: ListView(
                       children: [
                         Container(
-                          height: 100,
+                          height: 120,
                           child: GridView.count(
                             crossAxisCount: 3,
                             children: [
@@ -210,6 +215,7 @@ class _DashboardMobileState extends State<DashboardMobile>
                                 child: GestureDetector(
                                   onTap: _navigateToPayments,
                                   child: Card(
+                                    elevation: 4,
                                     child: Column(
                                       children: [
                                         SizedBox(
@@ -238,30 +244,34 @@ class _DashboardMobileState extends State<DashboardMobile>
                                 ),
                               ),
                               Container(
-                                child: Card(
-                                  child: Column(
-                                    children: [
-                                      SizedBox(
-                                        height: 16,
-                                      ),
-                                      StreamBuilder<List<TransactionDTO>>(
-                                          stream: agentBloc.transactionStream,
-                                          builder: (context, snapshot) {
-                                            if (snapshot.hasData)
-                                              _transactions = snapshot.data;
-                                            return Text(
-                                              '${_transactions.length}',
-                                              style: Styles.blackBoldLarge,
-                                            );
-                                          }),
-                                      SizedBox(
-                                        height: 8,
-                                      ),
-                                      Text(
-                                        'Transactions',
-                                        style: Styles.greyLabelSmall,
-                                      )
-                                    ],
+                                child: GestureDetector(
+                                  onTap: _navigateToTransactions,
+                                  child: Card(
+                                    elevation: 4,
+                                    child: Column(
+                                      children: [
+                                        SizedBox(
+                                          height: 16,
+                                        ),
+                                        StreamBuilder<List<TransactionDTO>>(
+                                            stream: agentBloc.transactionStream,
+                                            builder: (context, snapshot) {
+                                              if (snapshot.hasData)
+                                                _transactions = snapshot.data;
+                                              return Text(
+                                                '${_transactions.length}',
+                                                style: Styles.blackBoldLarge,
+                                              );
+                                            }),
+                                        SizedBox(
+                                          height: 8,
+                                        ),
+                                        Text(
+                                          'Transactions',
+                                          style: Styles.greyLabelSmall,
+                                        )
+                                      ],
+                                    ),
                                   ),
                                 ),
                               ),
@@ -269,12 +279,21 @@ class _DashboardMobileState extends State<DashboardMobile>
                           ),
                         ),
                         SizedBox(
-                          height: 24,
+                          height: 12,
                         ),
                         anchor == null
                             ? Container()
-                            : PaymentsLineChart(
-                                anchor.distributionStellarAccount.accountId),
+                            : TransactionChart(
+                                accountId: anchor
+                                    .distributionStellarAccount.accountId),
+                        SizedBox(
+                          height: 12,
+                        ),
+                        anchor == null
+                            ? Container()
+                            : PaymentChart(
+                                accountId: anchor
+                                    .distributionStellarAccount.accountId),
                       ],
                     ),
                   ),
@@ -421,12 +440,44 @@ class _DashboardMobileState extends State<DashboardMobile>
   static const BLUE =
       '🔵 🔵 🔵 DashboardMain:  🦠  🦠  🦠 FCM message arrived:  🦠 ';
 
-  @override
   onClose() {
     ScaffoldMessenger.of(_key.currentState.context).removeCurrentSnackBar();
   }
 
-  void _navigateToAgents() {}
+  void _navigateToAgents() {
+    p("🚈 _navigateToAgents ...");
+    Navigator.push(
+        context,
+        PageTransition(
+            type: PageTransitionType.scale,
+            curve: Curves.easeInOut,
+            duration: Duration(seconds: 2),
+            child: AgentList()));
+  }
 
-  void _navigateToPayments() {}
+  void _navigateToPayments() {
+    p("🚈 _navigateToPayments ...");
+    Navigator.push(
+        context,
+        PageTransition(
+            type: PageTransitionType.scale,
+            curve: Curves.easeInOut,
+            duration: Duration(seconds: 2),
+            child: AccountTransactionsMobile(
+              accountId: anchor.distributionStellarAccount.accountId,
+            )));
+  }
+
+  void _navigateToTransactions() {
+    p("🚈 _navigateToTransactions ...");
+    Navigator.push(
+        context,
+        PageTransition(
+            type: PageTransitionType.scale,
+            curve: Curves.easeInOut,
+            duration: Duration(seconds: 2),
+            child: AccountTransactionsMobile(
+              accountId: anchor.distributionStellarAccount.accountId,
+            )));
+  }
 }
