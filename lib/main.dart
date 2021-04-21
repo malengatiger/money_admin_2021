@@ -7,14 +7,14 @@ import 'package:money_library_2021/util/util.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  runApp(MyApp());
   await Firebase.initializeApp();
   p('🔵 🔵 🔵 Firebase initialized ....');
+  runApp(MoneyAdminApp());
   await DotEnv.load(fileName: '.env');
   p('🍎 🍎 🍎 DotEnv has been loaded - this is so cool! ');
 }
 
-class MyApp extends StatelessWidget {
+class MoneyAdminApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {

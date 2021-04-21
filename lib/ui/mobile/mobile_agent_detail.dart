@@ -49,7 +49,7 @@ class _AgentDetailMobileState extends State<AgentDetailMobile> {
         busy = true;
       });
     }
-    clients = await agentBloc.getClients(
+    clients = await agentBloc.getAgentClients(
         agentId: widget.agent.agentId, refresh: false);
     bag = await agentBloc.getBalances(
         accountId: widget.agent.stellarAccountId, refresh: false);
@@ -72,7 +72,7 @@ class _AgentDetailMobileState extends State<AgentDetailMobile> {
     }
     bag = await agentBloc.getBalances(
         accountId: widget.agent.stellarAccountId, refresh: true);
-    agentBloc.getClients(agentId: widget.agent.agentId, refresh: true);
+    agentBloc.getAgentClients(agentId: widget.agent.agentId, refresh: true);
     agentBloc.getBalances(
         accountId: widget.agent.stellarAccountId, refresh: true);
     if (mounted) {
@@ -203,7 +203,7 @@ class _AgentDetailMobileState extends State<AgentDetailMobile> {
                     GestureDetector(
                       onTap: () {
                         p('🔆 🔆 Refreshing clients .... ');
-                        agentBloc.getClients(
+                        agentBloc.getAgentClients(
                             agentId: widget.agent.agentId, refresh: true);
                       },
                       child: AgentClientsWidget(

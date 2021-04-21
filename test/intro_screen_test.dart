@@ -7,12 +7,12 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:money_admin_2021/main.dart';
+import 'package:money_admin_2021/ui/intro/intro_mobile.dart';
 
 void main() {
-  testWidgets('Counter increments smoke test', (WidgetTester tester) async {
+  testWidgets('Introduction screen test', (WidgetTester tester) async {
     // Build our app and trigger a frame.
-    await tester.pumpWidget(MoneyAdminApp());
+    await tester.pumpWidget(IntroMobile());
 
     // Verify that our counter starts at 0.
     expect(find.text('0'), findsOneWidget);

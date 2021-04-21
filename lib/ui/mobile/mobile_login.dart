@@ -32,10 +32,10 @@ class _LoginMobileState extends State<LoginMobile> implements SnackBarListener {
         body: isBusy
             ? Center(
                 child: Container(
-                  height: 60,
-                  width: 60,
+                  height: 20,
+                  width: 20,
                   child: CircularProgressIndicator(
-                    strokeWidth: 24,
+                    strokeWidth: 6,
                     backgroundColor: Colors.teal[800],
                   ),
                 ),
@@ -168,14 +168,14 @@ class _LoginFormState extends State<LoginForm>
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Card(
-                  elevation: 1,
-                  color: baseColor,
+                  elevation: 2,
+                  color: secondaryColor,
                   child: Padding(
-                    padding: const EdgeInsets.all(20.0),
+                    padding: const EdgeInsets.all(12.0),
                     child: Column(
                       children: <Widget>[
                         SizedBox(
-                          height: 80,
+                          height: 60,
                         ),
                         ScaleTransition(
                           scale: titleAnimation,
@@ -186,27 +186,27 @@ class _LoginFormState extends State<LoginForm>
                               titleController.forward();
                             },
                             child: Row(
+                              mainAxisAlignment: MainAxisAlignment.end,
                               children: <Widget>[
                                 Hero(
                                   tag: 'logo',
                                   child: Image.asset(
                                     'assets/logo/logo.png',
-                                    width: 24,
-                                    height: 24,
+                                    width: 20,
+                                    height: 20,
                                   ),
                                 ),
                                 SizedBox(
                                   width: 16,
                                 ),
                                 Text(
-                                  'Anchor Sign in',
+                                  'Anchor Boss Sign in',
                                   style: Styles.blackBoldMedium,
                                 ),
                                 SizedBox(
                                   width: 48,
                                 ),
                                 Row(
-                                  mainAxisAlignment: MainAxisAlignment.end,
                                   children: [
                                     IconButton(
                                         icon: Icon(Icons.close),
@@ -220,7 +220,7 @@ class _LoginFormState extends State<LoginForm>
                           ),
                         ),
                         SizedBox(
-                          height: 8,
+                          height: 16,
                         ),
                         Text(dummy),
                         SizedBox(
@@ -257,20 +257,28 @@ class _LoginFormState extends State<LoginForm>
                             width: 300,
                             decoration: BoxDecoration(
                                 boxShadow: customShadow,
-                                color: Colors.brown[100]),
+                                color: Theme.of(context).primaryColor),
                             child: isBusy
                                 ? Center(
                                     child: CircularProgressIndicator(),
                                   )
-                                : FlatButton(
+                                : ElevatedButton(
                                     onPressed: () {
                                       p('💙 tapped to go logging in ...');
                                       _signIn();
                                     },
-                                    child: Text(
-                                      "Submit Credentials",
-                                      style: Styles.blackBoldSmall,
-                                    ),
+                                    child: isBusy
+                                        ? Container(
+                                            width: 20,
+                                            height: 20,
+                                            child: CircularProgressIndicator(
+                                              strokeWidth: 6,
+                                            ),
+                                          )
+                                        : Text(
+                                            "Submit Credentials",
+                                            style: Styles.whiteBoldSmall,
+                                          ),
                                   ),
                           ),
                         ),

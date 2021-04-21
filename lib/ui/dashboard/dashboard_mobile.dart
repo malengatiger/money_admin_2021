@@ -1,14 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:money_admin_2021/ui/agent_list.dart';
-import 'package:money_admin_2021/ui/chart/payment_chart.dart';
-import 'package:money_admin_2021/ui/chart/transaction_chart.dart';
+import 'package:money_admin_2021/ui/chart/fiat_payment_chart.dart';
+import 'package:money_admin_2021/ui/chart/path_payment_chart.dart';
 import 'package:money_admin_2021/ui/mobile/account_transactions_mobile.dart';
 import 'package:money_library_2021/bloc/agent_bloc.dart';
 import 'package:money_library_2021/models/agent.dart';
 import 'package:money_library_2021/models/anchor.dart';
-import 'package:money_library_2021/models/payment_dto.dart';
+import 'package:money_library_2021/models/client.dart';
+import 'package:money_library_2021/models/fiat_payment_request.dart';
+import 'package:money_library_2021/models/path_payment_request.dart';
 import 'package:money_library_2021/models/stellar_account_bag.dart';
-import 'package:money_library_2021/models/transaction_dto.dart';
 import 'package:money_library_2021/util/functions.dart';
 import 'package:money_library_2021/util/prefs.dart';
 import 'package:money_library_2021/util/theme.dart';
@@ -23,12 +25,13 @@ class DashboardMobile extends StatefulWidget {
 class _DashboardMobileState extends State<DashboardMobile>
     with SingleTickerProviderStateMixin {
   AnimationController _controller;
+  Animation<double> _animation;
   var isBusy = false;
   var _agents = <Agent>[];
-  var _balances = <Balance>[];
-  var _payments = <PaymentDTO>[];
-  var _transactions = <TransactionDTO>[];
-  var _videos = <Anchor>[];
+  var _clients = <Client>[];
+  var _fiatPayments = <StellarFiatPaymentResponse>[];
+  var _pathPayments = <PathPaymentRequest>[];
+
   Anchor anchor;
   StellarAccountBag bag;
   static const mm = ' 🔵 🔵 🔵 🔵 🔵 🔵 DashboardMobile: ';
@@ -37,13 +40,26 @@ class _DashboardMobileState extends State<DashboardMobile>
   void initState() {
     _controller = AnimationController(vsync: this);
     super.initState();
+    _animation = Tween<double>(begin: 0, end: 1)
+        .animate(CurvedAnimation(parent: _controller, curve: Curves.easeInOut));
     _getAdmin();
     _setItems();
     // _listen();
   }
 
+  void _animate() {
+    _controller.forward();
+  }
+
   void _getAdmin() async {
+    setState(() {
+      isBusy = true;
+    });
     anchor = await Prefs.getAnchor();
+    setState(() {
+      isBusy = false;
+    });
+    prettyPrint(anchor.toJson(), "$mm ANCHOR");
     _refresh(false);
   }
 
@@ -64,26 +80,51 @@ class _DashboardMobileState extends State<DashboardMobile>
   }
 
   void _refresh(bool forceRefresh) async {
-    p('$mm Getting a lot of data ....');
+    p('\n\n\n$mm Getting a lot of data ................................ forceRefresh: $forceRefresh \n\n');
     setState(() {
       isBusy = true;
     });
+
     if (agentBloc == null) agentBloc = AgentBloc();
     _agents = await agentBloc.getAgents(
         anchorId: anchor.anchorId, refresh: forceRefresh);
-    _payments = await agentBloc.getPayments(
-        accountId: anchor.distributionStellarAccount.accountId,
+    _toggleState();
+    _clients = await agentBloc.getAnchorClients(
+        anchorId: anchor.anchorId, refresh: forceRefresh);
+    _toggleState();
+
+    DateTime to = DateTime.now();
+    DateTime from = to.subtract(Duration(days: 30));
+
+    _pathPayments = await agentBloc.getPathPaymentRequestsByAnchor(
+        anchorId: anchor.anchorId,
+        fromDate: from.toIso8601String(),
+        toDate: to.toIso8601String(),
         refresh: forceRefresh);
-    _transactions = await agentBloc.getTransactions(
-        accountId: anchor.distributionStellarAccount.accountId,
+    _toggleState();
+    _fiatPayments = await agentBloc.getFiatPaymentResponsesByAnchor(
+        anchorId: anchor.anchorId,
+        fromDate: from.toIso8601String(),
+        toDate: to.toIso8601String(),
         refresh: forceRefresh);
+    _toggleState();
     bag = await agentBloc.getBalances(
         accountId: anchor.distributionStellarAccount.accountId,
         refresh: forceRefresh);
-    p('$mm Finished getting a lot of data ....  🍎 🍎 '
-        'payments: ${_payments.length}  🍎 balances: ${bag.balances.length}  🍎 transactions: ${_transactions.length}');
+
+    p('$mm Finished getting a lot of data ....  🍎 🍎 agents: ${_agents.length} '
+        'clients: ${_clients.length}  🍎 balances: ${bag.balances.length}  🍎 _pathPayments: ${_pathPayments.length}');
     setState(() {
       isBusy = false;
+    });
+  }
+
+  void _toggleState() {
+    setState(() {
+      isBusy = false;
+    });
+    setState(() {
+      isBusy = true;
     });
   }
 
@@ -132,173 +173,205 @@ class _DashboardMobileState extends State<DashboardMobile>
             )
           ],
           bottom: PreferredSize(
-            preferredSize: Size.fromHeight(80),
+            preferredSize: Size.fromHeight(50),
             child: Column(
               children: [
                 Text(
                   anchor == null ? '' : anchor.name,
-                  style: Styles.blackBoldMedium,
+                  //chango, ericaOne
+                  style: GoogleFonts.modak(
+                    textStyle: TextStyle(color: Colors.grey[400], fontSize: 24),
+                  ),
                 ),
+                // SizedBox(
+                //   height: 8,
+                // ),
+                // Text(
+                //   'Anchor Administrator',
+                //   style: Styles.blackTiny,
+                // ),
                 SizedBox(
                   height: 8,
-                ),
-                Text(
-                  'Anchor Administrator',
-                  style: Styles.blackTiny,
-                ),
-                SizedBox(
-                  height: 20,
                 ),
               ],
             ),
           ),
         ),
         backgroundColor: secondaryColor,
-        bottomNavigationBar: BottomNavigationBar(
-          items: items,
-          onTap: ((m) {}),
-        ),
-        body: isBusy
-            ? Center(
-                child: Container(
-                  height: 48,
-                  width: 48,
-                  child: CircularProgressIndicator(
-                    strokeWidth: 8,
-                    backgroundColor: Colors.teal,
-                  ),
-                ),
-              )
-            : Stack(
+        // bottomNavigationBar: BottomNavigationBar(
+        //   items: items,
+        //   onTap: ((m) {}),
+        // ),
+        body: Stack(
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(12.0),
+              child: ListView(
                 children: [
-                  Padding(
-                    padding: const EdgeInsets.all(12.0),
-                    child: ListView(
+                  Container(
+                    height: 130,
+                    child: GridView.count(
+                      crossAxisCount: 3,
                       children: [
                         Container(
-                          height: 120,
-                          child: GridView.count(
-                            crossAxisCount: 3,
-                            children: [
-                              Container(
-                                child: GestureDetector(
-                                  onTap: _navigateToAgents,
-                                  child: Card(
-                                    child: Column(
-                                      children: [
-                                        SizedBox(
-                                          height: 20,
-                                        ),
-                                        StreamBuilder<List<Agent>>(
-                                            stream: agentBloc.agentStream,
-                                            builder: (context, snapshot) {
-                                              if (snapshot.hasData)
-                                                _agents = snapshot.data;
-                                              return Text(
+                          child: GestureDetector(
+                            onTap: _navigateToAgents,
+                            child: Card(
+                              elevation: 4,
+                              child: Column(
+                                children: [
+                                  SizedBox(
+                                    height: 20,
+                                  ),
+                                  StreamBuilder<List<Agent>>(
+                                      stream: agentBloc.agentStream,
+                                      builder: (context, snapshot) {
+                                        if (snapshot.hasData)
+                                          _agents = snapshot.data;
+                                        return isBusy
+                                            ? Center(
+                                                child: Container(
+                                                  height: 16,
+                                                  width: 16,
+                                                  child:
+                                                      CircularProgressIndicator(
+                                                    strokeWidth: 2,
+                                                    backgroundColor:
+                                                        Colors.black,
+                                                  ),
+                                                ),
+                                              )
+                                            : Text(
                                                 '${_agents.length}',
-                                                style: Styles.blackBoldLarge,
+                                                style: _agents.length < 10000
+                                                    ? Styles.blackBoldLarge
+                                                    : Styles.blackBoldMedium,
                                               );
-                                            }),
-                                        SizedBox(
-                                          height: 8,
-                                        ),
-                                        Text(
-                                          'Agents',
-                                          style: Styles.greyLabelSmall,
-                                        )
-                                      ],
-                                    ),
+                                      }),
+                                  SizedBox(
+                                    height: 8,
                                   ),
-                                ),
+                                  Text(
+                                    'Agents',
+                                    style: Styles.greyLabelSmall,
+                                  )
+                                ],
                               ),
-                              Container(
-                                child: GestureDetector(
-                                  onTap: _navigateToPayments,
-                                  child: Card(
-                                    elevation: 4,
-                                    child: Column(
-                                      children: [
-                                        SizedBox(
-                                          height: 16,
-                                        ),
-                                        StreamBuilder<List<PaymentDTO>>(
-                                            stream: agentBloc.paymentStream,
-                                            builder: (context, snapshot) {
-                                              if (snapshot.hasData)
-                                                _payments = snapshot.data;
-                                              return Text(
-                                                '${_payments.length}',
-                                                style: Styles.blackBoldLarge,
-                                              );
-                                            }),
-                                        SizedBox(
-                                          height: 8,
-                                        ),
-                                        Text(
-                                          'Payments',
-                                          style: Styles.greyLabelSmall,
-                                        )
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                              ),
-                              Container(
-                                child: GestureDetector(
-                                  onTap: _navigateToTransactions,
-                                  child: Card(
-                                    elevation: 4,
-                                    child: Column(
-                                      children: [
-                                        SizedBox(
-                                          height: 16,
-                                        ),
-                                        StreamBuilder<List<TransactionDTO>>(
-                                            stream: agentBloc.transactionStream,
-                                            builder: (context, snapshot) {
-                                              if (snapshot.hasData)
-                                                _transactions = snapshot.data;
-                                              return Text(
-                                                '${_transactions.length}',
-                                                style: Styles.blackBoldLarge,
-                                              );
-                                            }),
-                                        SizedBox(
-                                          height: 8,
-                                        ),
-                                        Text(
-                                          'Transactions',
-                                          style: Styles.greyLabelSmall,
-                                        )
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ],
+                            ),
                           ),
                         ),
-                        SizedBox(
-                          height: 12,
+                        Container(
+                          child: GestureDetector(
+                            onTap: _navigateToPayments,
+                            child: Card(
+                              elevation: 4,
+                              child: Column(
+                                children: [
+                                  SizedBox(
+                                    height: 20,
+                                  ),
+                                  StreamBuilder<List<Client>>(
+                                      stream: agentBloc.clientStream,
+                                      builder: (context, snapshot) {
+                                        if (snapshot.hasData)
+                                          _clients = snapshot.data;
+                                        return isBusy
+                                            ? Center(
+                                                child: Container(
+                                                  height: 16,
+                                                  width: 16,
+                                                  child:
+                                                      CircularProgressIndicator(
+                                                    strokeWidth: 2,
+                                                    backgroundColor:
+                                                        Colors.black,
+                                                  ),
+                                                ),
+                                              )
+                                            : Text(
+                                                '${_clients.length}',
+                                                style: _fiatPayments.length <
+                                                        10000
+                                                    ? Styles.blackBoldLarge
+                                                    : Styles.blackBoldMedium,
+                                              );
+                                      }),
+                                  SizedBox(
+                                    height: 8,
+                                  ),
+                                  Text(
+                                    'Clients',
+                                    style: Styles.greyLabelSmall,
+                                  )
+                                ],
+                              ),
+                            ),
+                          ),
                         ),
-                        anchor == null
-                            ? Container()
-                            : TransactionChart(
-                                accountId: anchor
-                                    .distributionStellarAccount.accountId),
-                        SizedBox(
-                          height: 12,
+                        Container(
+                          child: GestureDetector(
+                            onTap: _navigateToTransactions,
+                            child: Card(
+                              elevation: 4,
+                              child: Column(
+                                children: [
+                                  SizedBox(
+                                    height: 20,
+                                  ),
+                                  StreamBuilder<List<PathPaymentRequest>>(
+                                      stream: agentBloc.pathPaymentStream,
+                                      builder: (context, snapshot) {
+                                        if (snapshot.hasData)
+                                          _pathPayments = snapshot.data;
+                                        return isBusy
+                                            ? Center(
+                                                child: Container(
+                                                  height: 16,
+                                                  width: 16,
+                                                  child:
+                                                      CircularProgressIndicator(
+                                                    strokeWidth: 2,
+                                                    backgroundColor:
+                                                        Colors.black,
+                                                  ),
+                                                ),
+                                              )
+                                            : Text(
+                                                '${_pathPayments.length}',
+                                                style: _pathPayments.length <
+                                                        10000
+                                                    ? Styles.blackBoldLarge
+                                                    : Styles.blackBoldMedium,
+                                              );
+                                      }),
+                                  SizedBox(
+                                    height: 8,
+                                  ),
+                                  Text(
+                                    'Path Payments',
+                                    style: Styles.greyLabelSmall,
+                                  )
+                                ],
+                              ),
+                            ),
+                          ),
                         ),
-                        anchor == null
-                            ? Container()
-                            : PaymentChart(
-                                accountId: anchor
-                                    .distributionStellarAccount.accountId),
                       ],
                     ),
                   ),
+                  SizedBox(
+                    height: 0,
+                  ),
+                  isBusy ? Container() : FiatPaymentChart(),
+                  SizedBox(
+                    height: 12,
+                  ),
+                  isBusy ? Container() : PathPaymentChart(),
                 ],
               ),
+            ),
+          ],
+        ),
       ),
     );
   }

@@ -4,6 +4,7 @@ import 'package:introduction_screen/introduction_screen.dart';
 import 'package:money_admin_2021/ui/dashboard/dashboard_main.dart';
 import 'package:money_library_2021/models/anchor.dart';
 import 'package:money_library_2021/util/functions.dart';
+import 'package:money_library_2021/util/prefs.dart';
 import 'package:money_library_2021/util/util.dart';
 import 'package:page_transition/page_transition.dart';
 
@@ -26,6 +27,7 @@ class _IntroMobileState extends State<IntroMobile>
       'eget mollis elit rhoncus ut.';
 
   var mList = <PageViewModel>[];
+  Anchor _anchor;
   void _buildPages(BuildContext context) {
     var page1 = PageViewModel(
       titleWidget: Text(
@@ -79,6 +81,11 @@ class _IntroMobileState extends State<IntroMobile>
     _controller = AnimationController(vsync: this);
     super.initState();
     user = widget.user;
+    _getAnchor();
+  }
+
+  void _getAnchor() async {
+    _anchor = await Prefs.getAnchor();
   }
 
   @override
@@ -96,7 +103,7 @@ class _IntroMobileState extends State<IntroMobile>
       child: Scaffold(
         appBar: AppBar(
           title: Text(
-            'AzaniaAnchor Bank',
+            _anchor == null ? 'Anchor loading ...' : _anchor.name,
             style: Styles.whiteSmall,
           ),
           bottom: PreferredSize(

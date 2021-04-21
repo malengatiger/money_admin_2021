@@ -88,15 +88,26 @@ class _AccountTransactionsMobileState extends State<AccountTransactionsMobile>
                   ),
                   Padding(
                     padding: const EdgeInsets.only(left: 28.0),
-                    child: Text(
-                      "Account Balances",
-                      style: Styles.blackBoldMedium,
+                    child: Row(
+                      children: [
+                        Text(
+                          '${stellarAccountBag == null ? "" : '${stellarAccountBag.balances.length}'}',
+                          style: Styles.tealBoldMedium,
+                        ),
+                        SizedBox(
+                          width: 12,
+                        ),
+                        Text(
+                          "Account Balances",
+                          style: Styles.blackBoldMedium,
+                        ),
+                      ],
                     ),
                   ),
                   Container(
                     height: 300,
                     child: Padding(
-                      padding: const EdgeInsets.all(16.0),
+                      padding: const EdgeInsets.all(12.0),
                       child: ListView.builder(
                           itemCount: stellarAccountBag == null
                               ? 0
@@ -138,16 +149,27 @@ class _AccountTransactionsMobileState extends State<AccountTransactionsMobile>
                     height: 12,
                   ),
                   Padding(
-                    padding: const EdgeInsets.only(left: 28.0),
-                    child: Text(
-                      "Account Payments",
-                      style: Styles.blackBoldMedium,
+                    padding: const EdgeInsets.only(left: 20.0),
+                    child: Row(
+                      children: [
+                        Text(
+                          '${payments.length}',
+                          style: Styles.blueBoldMedium,
+                        ),
+                        SizedBox(
+                          width: 12,
+                        ),
+                        Text(
+                          "Account Payments",
+                          style: Styles.blackBoldMedium,
+                        ),
+                      ],
                     ),
                   ),
                   Container(
-                    height: 400,
+                    height: 600,
                     child: Padding(
-                      padding: const EdgeInsets.all(16.0),
+                      padding: const EdgeInsets.all(12.0),
                       child: ListView.builder(
                           itemCount: payments.length,
                           itemBuilder: (context, index) {
@@ -172,13 +194,14 @@ class _AccountTransactionsMobileState extends State<AccountTransactionsMobile>
                                           width: 8,
                                         ),
                                         Text(
-                                          pay.amount,
+                                          getFormattedAmount(
+                                              pay.amount, context),
                                           style: Styles.tealBoldMedium,
                                         ),
                                         Row(
                                           children: [
                                             SizedBox(
-                                              width: 100,
+                                              width: 60,
                                             ),
                                             Image.asset(
                                               CurrencyIcons
