@@ -24,16 +24,16 @@ class DashboardMobile extends StatefulWidget {
 
 class _DashboardMobileState extends State<DashboardMobile>
     with SingleTickerProviderStateMixin {
-  AnimationController _controller;
-  Animation<double> _animation;
+  late AnimationController _controller;
+  Animation<double>? _animation;
   var isBusy = false;
-  var _agents = <Agent>[];
-  var _clients = <Client>[];
+  List<Agent>? _agents = <Agent>[];
+  List<Client>? _clients = <Client>[];
   var _fiatPayments = <StellarFiatPaymentResponse>[];
-  var _pathPayments = <PathPaymentRequest>[];
+  List<PathPaymentRequest>? _pathPayments = <PathPaymentRequest>[];
 
-  Anchor anchor;
-  StellarAccountBag bag;
+  Anchor? anchor;
+  StellarAccountBag? bag;
   static const mm = ' 🔵 🔵 🔵 🔵 🔵 🔵 DashboardMobile: ';
 
   @override
@@ -59,7 +59,7 @@ class _DashboardMobileState extends State<DashboardMobile>
     setState(() {
       isBusy = false;
     });
-    prettyPrint(anchor.toJson(), "$mm ANCHOR");
+    prettyPrint(anchor!.toJson(), "$mm ANCHOR");
     _refresh(false);
   }
 
@@ -87,33 +87,33 @@ class _DashboardMobileState extends State<DashboardMobile>
 
     if (agentBloc == null) agentBloc = AgentBloc();
     _agents = await agentBloc.getAgents(
-        anchorId: anchor.anchorId, refresh: forceRefresh);
+        anchorId: anchor!.anchorId, refresh: forceRefresh);
     _toggleState();
     _clients = await agentBloc.getAnchorClients(
-        anchorId: anchor.anchorId, refresh: forceRefresh);
+        anchorId: anchor!.anchorId, refresh: forceRefresh);
     _toggleState();
 
     DateTime to = DateTime.now();
     DateTime from = to.subtract(Duration(days: 30));
 
     _pathPayments = await agentBloc.getPathPaymentRequestsByAnchor(
-        anchorId: anchor.anchorId,
+        anchorId: anchor!.anchorId,
         fromDate: from.toIso8601String(),
         toDate: to.toIso8601String(),
         refresh: forceRefresh);
     _toggleState();
     _fiatPayments = await agentBloc.getFiatPaymentResponsesByAnchor(
-        anchorId: anchor.anchorId,
+        anchorId: anchor!.anchorId,
         fromDate: from.toIso8601String(),
         toDate: to.toIso8601String(),
         refresh: forceRefresh);
     _toggleState();
     bag = await agentBloc.getBalances(
-        accountId: anchor.distributionStellarAccount.accountId,
+        accountId: anchor!.distributionStellarAccount!.accountId,
         refresh: forceRefresh);
 
-    p('$mm Finished getting a lot of data ....  🍎 🍎 agents: ${_agents.length} '
-        'clients: ${_clients.length}  🍎 balances: ${bag.balances.length}  🍎 _pathPayments: ${_pathPayments.length}');
+    p('$mm Finished getting a lot of data ....  🍎 🍎 agents: ${_agents!.length} '
+        'clients: ${_clients!.length}  🍎 balances: ${bag!.balances!.length}  🍎 _pathPayments: ${_pathPayments!.length}');
     setState(() {
       isBusy = false;
     });
@@ -177,7 +177,7 @@ class _DashboardMobileState extends State<DashboardMobile>
             child: Column(
               children: [
                 Text(
-                  anchor == null ? '' : anchor.name,
+                  anchor == null ? '' : anchor!.name!,
                   //chango, ericaOne
                   style: GoogleFonts.modak(
                     textStyle: TextStyle(color: Colors.grey[400], fontSize: 24),
@@ -242,8 +242,8 @@ class _DashboardMobileState extends State<DashboardMobile>
                                                 ),
                                               )
                                             : Text(
-                                                '${_agents.length}',
-                                                style: _agents.length < 10000
+                                                '${_agents!.length}',
+                                                style: _agents!.length < 10000
                                                     ? Styles.blackBoldLarge
                                                     : Styles.blackBoldMedium,
                                               );
@@ -289,7 +289,7 @@ class _DashboardMobileState extends State<DashboardMobile>
                                                 ),
                                               )
                                             : Text(
-                                                '${_clients.length}',
+                                                '${_clients!.length}',
                                                 style: _fiatPayments.length <
                                                         10000
                                                     ? Styles.blackBoldLarge
@@ -337,8 +337,8 @@ class _DashboardMobileState extends State<DashboardMobile>
                                                 ),
                                               )
                                             : Text(
-                                                '${_pathPayments.length}',
-                                                style: _pathPayments.length <
+                                                '${_pathPayments!.length}',
+                                                style: _pathPayments!.length <
                                                         10000
                                                     ? Styles.blackBoldLarge
                                                     : Styles.blackBoldMedium,
@@ -514,7 +514,7 @@ class _DashboardMobileState extends State<DashboardMobile>
       '🔵 🔵 🔵 DashboardMain:  🦠  🦠  🦠 FCM message arrived:  🦠 ';
 
   onClose() {
-    ScaffoldMessenger.of(_key.currentState.context).removeCurrentSnackBar();
+    ScaffoldMessenger.of(_key.currentState!.context).removeCurrentSnackBar();
   }
 
   void _navigateToAgents() {
@@ -537,7 +537,7 @@ class _DashboardMobileState extends State<DashboardMobile>
             curve: Curves.easeInOut,
             duration: Duration(seconds: 2),
             child: AccountTransactionsMobile(
-              accountId: anchor.distributionStellarAccount.accountId,
+              accountId: anchor!.distributionStellarAccount!.accountId,
             )));
   }
 
@@ -550,7 +550,7 @@ class _DashboardMobileState extends State<DashboardMobile>
             curve: Curves.easeInOut,
             duration: Duration(seconds: 2),
             child: AccountTransactionsMobile(
-              accountId: anchor.distributionStellarAccount.accountId,
+              accountId: anchor!.distributionStellarAccount!.accountId,
             )));
   }
 }

@@ -5,9 +5,9 @@ import 'package:responsive_builder/responsive_builder.dart';
 import 'mobile/mobile_funder.dart';
 
 class AgentFunder extends StatefulWidget {
-  final Agent agent;
+  final Agent? agent;
 
-  const AgentFunder({Key key, this.agent}) : super(key: key);
+  const AgentFunder({Key? key, this.agent}) : super(key: key);
   @override
   _AgentFunderState createState() => _AgentFunderState();
 }

@@ -4,9 +4,9 @@ import 'package:money_library_2021/util/functions.dart';
 import 'package:money_library_2021/util/util.dart';
 
 class AgentEditorMobile extends StatefulWidget {
-  final Agent agent;
+  final Agent? agent;
 
-  const AgentEditorMobile({Key key, this.agent}) : super(key: key);
+  const AgentEditorMobile({Key? key, this.agent}) : super(key: key);
   @override
   _AgentEditorMobileState createState() => _AgentEditorMobileState();
 }
@@ -33,9 +33,9 @@ class _AgentEditorMobileState extends State<AgentEditorMobile> {
 }
 
 class PageUno extends StatefulWidget {
-  final Agent agent;
+  final Agent? agent;
 
-  const PageUno({Key key, this.agent}) : super(key: key);
+  const PageUno({Key? key, this.agent}) : super(key: key);
   @override
   _PageUnoState createState() => _PageUnoState();
 }
@@ -51,10 +51,10 @@ class _PageUnoState extends State<PageUno> with SingleTickerProviderStateMixin {
     super.initState();
 
     if (widget.agent != null) {
-      fNameController.text = widget.agent.personalKYCFields.firstName;
-      lNameController.text = widget.agent.personalKYCFields.lastName;
-      emailController.text = widget.agent.personalKYCFields.emailAddress;
-      cellController.text = widget.agent.personalKYCFields.mobileNumber;
+      fNameController.text = widget.agent!.personalKYCFields!.firstName!;
+      lNameController.text = widget.agent!.personalKYCFields!.lastName!;
+      emailController.text = widget.agent!.personalKYCFields!.emailAddress!;
+      cellController.text = widget.agent!.personalKYCFields!.mobileNumber!;
     } else {
       p('MobileAgentEditor - agent is null 🔆 🔆 🔆 ');
     }
@@ -80,7 +80,7 @@ class _PageUnoState extends State<PageUno> with SingleTickerProviderStateMixin {
                 icon: Icon(Icons.person, color: baseColor),
               ),
               validator: (value) {
-                if (value.isEmpty) {
+                if (value!.isEmpty) {
                   return 'Please enter Agent First Name';
                 }
                 return null;
@@ -100,7 +100,7 @@ class _PageUnoState extends State<PageUno> with SingleTickerProviderStateMixin {
                 ),
               ),
               validator: (value) {
-                if (value.isEmpty) {
+                if (value!.isEmpty) {
                   return 'Please enter Agent Last Name';
                 }
                 return null;
@@ -115,7 +115,7 @@ class _PageUnoState extends State<PageUno> with SingleTickerProviderStateMixin {
                 icon: Icon(Icons.email, color: baseColor),
               ),
               validator: (value) {
-                if (value.isEmpty) {
+                if (value!.isEmpty) {
                   return 'Please enter Email';
                 }
                 return null;
@@ -129,7 +129,7 @@ class _PageUnoState extends State<PageUno> with SingleTickerProviderStateMixin {
                   hintText: 'Enter Cellphone Number',
                   icon: Icon(Icons.phone, color: baseColor)),
               validator: (value) {
-                if (value.isEmpty) {
+                if (value!.isEmpty) {
                   return 'Please enter Cellphone Number';
                 }
                 return null;

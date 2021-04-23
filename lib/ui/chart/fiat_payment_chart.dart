@@ -16,10 +16,10 @@ class FiatPaymentChart extends StatefulWidget {
 
 class _FiatPaymentChartState extends State<FiatPaymentChart>
     with SingleTickerProviderStateMixin {
-  AnimationController _controller;
+  late AnimationController _controller;
   List<StellarFiatPaymentResponse> _payments = [];
   bool busy = false;
-  Anchor _anchor;
+  Anchor? _anchor;
   static const mm = '🍎 🍎 🍎 🍎  FiatPaymentChart: 👽 👽 👽 👽 ';
 
   @override
@@ -39,7 +39,7 @@ class _FiatPaymentChartState extends State<FiatPaymentChart>
     DateTime to = DateTime.now();
     DateTime from = to.subtract(Duration(days: 30));
     _payments = await agentBloc.getFiatPaymentResponsesByAnchor(
-        anchorId: _anchor.anchorId,
+        anchorId: _anchor!.anchorId,
         fromDate: from.toIso8601String(),
         toDate: to.toIso8601String(),
         refresh: refresh);
@@ -52,14 +52,14 @@ class _FiatPaymentChartState extends State<FiatPaymentChart>
 
   void _wrangleTransactions() {
     //create aggregations ....
-    _payments.sort((a, b) => a.date.compareTo(b.date));
+    _payments.sort((a, b) => a.date!.compareTo(b.date!));
     final SplayTreeMap<int, Map<int, int>> splayTreeMap =
         SplayTreeMap<int, Map<int, int>>();
     Map<int, int> map = HashMap();
     _payments.forEach((p) {
-      DateTime date = DateTime.parse(p.date);
+      DateTime date = DateTime.parse(p.date!);
       int day = date.day;
-      int totalForToday = map[day];
+      int? totalForToday = map[day];
       if (totalForToday == null) totalForToday = 0;
       int count = totalForToday + 1;
       map[day] = count;

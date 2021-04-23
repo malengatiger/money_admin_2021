@@ -22,10 +22,10 @@ class AgentList extends StatefulWidget {
 
 class _AgentListState extends State<AgentList>
     with SingleTickerProviderStateMixin {
-  AnimationController animController;
-  Animation animation, animation2;
+  late AnimationController animController;
+  Animation? animation, animation2;
   bool productionMode = false;
-  bool isBusy;
+  late bool isBusy;
 
   @override
   void initState() {
@@ -72,8 +72,8 @@ class _AgentListState extends State<AgentList>
     });
   }
 
-  List<Agent> _agents = [];
-  Anchor _anchor;
+  List<Agent>? _agents = [];
+  Anchor? _anchor;
 
   _refresh(bool refresh) async {
     p('🥦 AgentList: refresh base data: getAgents 🥦 🥦 🥦  ...');
@@ -83,10 +83,10 @@ class _AgentListState extends State<AgentList>
     _anchor = await Prefs.getAnchor();
     if (_anchor != null) {
       _agents = await agentBloc.getAgents(
-          anchorId: _anchor.anchorId, refresh: refresh);
-      _agents.sort((a, b) => a.personalKYCFields
+          anchorId: _anchor!.anchorId, refresh: refresh);
+      _agents!.sort((a, b) => a.personalKYCFields!
           .getFullName()
-          .compareTo(b.personalKYCFields.getFullName()));
+          .compareTo(b.personalKYCFields!.getFullName()));
       setState(() {
         isBusy = false;
       });
@@ -106,7 +106,7 @@ class _AgentListState extends State<AgentList>
             )));
   }
 
-  _navigateToAgentEditor({Agent agent}) {
+  _navigateToAgentEditor({Agent? agent}) {
     p("🚈 🔆 🔆 _navigateToAgentDetails ...");
     Navigator.push(
         context,
@@ -147,7 +147,7 @@ class _AgentListState extends State<AgentList>
                     Row(
                       children: <Widget>[
                         Text(
-                          _anchor == null ? '' : _anchor.name,
+                          _anchor == null ? '' : _anchor!.name!,
                           style: Styles.blackBoldMedium,
                         ),
                       ],
@@ -170,7 +170,7 @@ class _AgentListState extends State<AgentList>
                 icon: Icon(Icons.refresh),
                 onPressed: () {
                   agentBloc.getAgents(
-                      anchorId: _anchor.anchorId, refresh: true);
+                      anchorId: _anchor!.anchorId, refresh: true);
                 }),
             IconButton(
                 icon: Icon(Icons.add),
@@ -192,15 +192,15 @@ class _AgentListState extends State<AgentList>
                   builder: (context, snapshot) {
                     if (snapshot.hasData) {
                       _agents = snapshot.data;
-                      _agents.sort((a, b) => a.personalKYCFields
+                      _agents!.sort((a, b) => a.personalKYCFields!
                           .getFullName()
-                          .compareTo(b.personalKYCFields.getFullName()));
+                          .compareTo(b.personalKYCFields!.getFullName()));
                     }
 
                     return ListView.builder(
-                        itemCount: _agents.length,
+                        itemCount: _agents!.length,
                         itemBuilder: (context, index) {
-                          var mAgent = _agents.elementAt(index);
+                          var mAgent = _agents!.elementAt(index);
                           return Padding(
                             padding: const EdgeInsets.only(
                                 left: 20.0, right: 20, top: 12),
@@ -216,15 +216,15 @@ class _AgentListState extends State<AgentList>
                                   leading: RoundAvatar(
                                     path: mAgent.url == null
                                         ? 'assets/logo/logo.png'
-                                        : mAgent.url,
+                                        : mAgent.url!,
                                     radius: mAgent.url == null ? 20 : 48,
                                     fromNetwork:
                                         mAgent.url == null ? false : true,
                                   ),
                                   title: Text(
-                                    _agents
+                                    _agents!
                                         .elementAt(index)
-                                        .personalKYCFields
+                                        .personalKYCFields!
                                         .getFullName(),
                                     style: Styles.blackSmall,
                                   ),
@@ -243,11 +243,11 @@ class _AgentListState extends State<AgentList>
                     _refresh(true);
                   },
                   child: RoundNumberWidget(
-                    number: _agents.length,
+                    number: _agents!.length,
                     radius: 60,
                     margin: 12,
-                    marginColor: Colors.blue[200],
-                    mainColor: Colors.pink[200],
+                    marginColor: Colors.blue[200]!,
+                    mainColor: Colors.pink[200]!,
                     textStyle: Styles.whiteBoldSmall,
                   ),
                 )),
@@ -270,7 +270,7 @@ class _AgentListState extends State<AgentList>
     );
   }
 
-  double left = 40.0, bottom, top = 40, right;
+  double? left = 40.0, bottom, top = 40, right;
   bool isUp = true;
 
   _moveUp() {

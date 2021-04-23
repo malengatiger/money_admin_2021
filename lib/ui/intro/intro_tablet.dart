@@ -9,16 +9,16 @@ import 'package:page_transition/page_transition.dart';
 import '../login.dart';
 
 class IntroTablet extends StatefulWidget {
-  final AnchorUser user;
-  IntroTablet({Key key, this.user}) : super(key: key);
+  final AnchorUser? user;
+  IntroTablet({Key? key, this.user}) : super(key: key);
   @override
   _IntroTabletState createState() => _IntroTabletState();
 }
 
 class _IntroTabletState extends State<IntroTablet>
     with SingleTickerProviderStateMixin {
-  AnimationController _controller;
-  AnchorUser user;
+  late AnimationController _controller;
+  AnchorUser? user;
   var lorem =
       'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed ac sagittis lectus. Aliquam dictum elementum massa, '
       'eget mollis elit rhoncus ut.';
@@ -149,7 +149,7 @@ class _IntroTabletState extends State<IntroTablet>
                         ],
                       )
                     : Text(
-                        '${user.firstName} ${user.lastName}',
+                        '${user!.firstName} ${user!.lastName}',
                         style: Styles.blackBoldSmall,
                       ),
                 SizedBox(

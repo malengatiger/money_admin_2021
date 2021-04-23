@@ -11,8 +11,8 @@ import 'intro_mobile.dart';
 import 'intro_tablet.dart';
 
 class IntroMain extends StatefulWidget {
-  final AnchorUser user;
-  IntroMain({Key key, this.user}) : super(key: key);
+  final AnchorUser? user;
+  IntroMain({Key? key, this.user}) : super(key: key);
 
   @override
   _IntroMainState createState() => _IntroMainState();
@@ -21,7 +21,7 @@ class IntroMain extends StatefulWidget {
 /// Main Widget that manages a responsive layout for intro pages
 class _IntroMainState extends State<IntroMain> {
   var isBusy = false;
-  AnchorUser user;
+  AnchorUser? user;
   @override
   void initState() {
     super.initState();
@@ -39,7 +39,7 @@ class _IntroMainState extends State<IntroMain> {
     });
     user = await Prefs.getAnchorUser();
     if (user != null) {
-      p('IntroMain: 🎽 🎽 🎽 Checking the user:  🎽 User is ${user.firstName}  🎽');
+      p('IntroMain: 🎽 🎽 🎽 Checking the user:  🎽 User is ${user!.firstName}  🎽');
       Navigator.pop(context);
       Navigator.push(
           context,

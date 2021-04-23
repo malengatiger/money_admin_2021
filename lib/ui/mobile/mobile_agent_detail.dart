@@ -18,7 +18,7 @@ import '../agent_editor.dart';
 import '../funder.dart';
 
 class AgentDetailMobile extends StatefulWidget {
-  final Agent agent;
+  final Agent? agent;
   const AgentDetailMobile(this.agent);
 
   @override
@@ -27,12 +27,12 @@ class AgentDetailMobile extends StatefulWidget {
 
 class _AgentDetailMobileState extends State<AgentDetailMobile> {
   bool weAreInProduction = false;
-  List<StellarAccountBag> bags = [];
-  StellarAccountBag bag;
+  List<StellarAccountBag>? bags = [];
+  StellarAccountBag? bag;
   List<Client> clients = [];
-  String path;
+  String? path;
   bool isBusy = false;
-  AnchorUser anchorUser;
+  AnchorUser? anchorUser;
 
   @override
   void initState() {
@@ -50,9 +50,9 @@ class _AgentDetailMobileState extends State<AgentDetailMobile> {
       });
     }
     clients = await agentBloc.getAgentClients(
-        agentId: widget.agent.agentId, refresh: false);
+        agentId: widget.agent!.agentId, refresh: false);
     bag = await agentBloc.getBalances(
-        accountId: widget.agent.stellarAccountId, refresh: false);
+        accountId: widget.agent!.stellarAccountId, refresh: false);
     if (mounted) {
       setState(() {
         busy = false;
@@ -71,10 +71,10 @@ class _AgentDetailMobileState extends State<AgentDetailMobile> {
       });
     }
     bag = await agentBloc.getBalances(
-        accountId: widget.agent.stellarAccountId, refresh: true);
-    agentBloc.getAgentClients(agentId: widget.agent.agentId, refresh: true);
+        accountId: widget.agent!.stellarAccountId, refresh: true);
+    agentBloc.getAgentClients(agentId: widget.agent!.agentId, refresh: true);
     agentBloc.getBalances(
-        accountId: widget.agent.stellarAccountId, refresh: true);
+        accountId: widget.agent!.stellarAccountId, refresh: true);
     if (mounted) {
       setState(() {
         busy = false;
@@ -82,17 +82,17 @@ class _AgentDetailMobileState extends State<AgentDetailMobile> {
     }
   }
 
-  String getPath() {
+  String? getPath() {
     path = RandomImage.getImagePath();
     if (weAreInProduction) {
-      if (widget.agent.url == null) {
+      if (widget.agent!.url == null) {
         return 'assets/logo/logo.png';
       } else {
-        return widget.agent.url;
+        return widget.agent!.url;
       }
     } else {
-      if (widget.agent.url != null) {
-        return widget.agent.url;
+      if (widget.agent!.url != null) {
+        return widget.agent!.url;
       }
       return path;
     }
@@ -164,7 +164,7 @@ class _AgentDetailMobileState extends State<AgentDetailMobile> {
               child: Column(
                 children: <Widget>[
                   Text(
-                    widget.agent.personalKYCFields.getFullName(),
+                    widget.agent!.personalKYCFields!.getFullName(),
                     style: Styles.blackBoldMedium,
                   ),
                   SizedBox(
@@ -192,10 +192,10 @@ class _AgentDetailMobileState extends State<AgentDetailMobile> {
                       height: isBusy ? 10 : 40,
                     ),
                     EmailWidget(
-                      emailAddress: widget.agent.personalKYCFields.emailAddress,
+                      emailAddress: widget.agent!.personalKYCFields!.emailAddress,
                     ),
                     PhoneWidget(
-                      phoneNumber: widget.agent.personalKYCFields.mobileNumber,
+                      phoneNumber: widget.agent!.personalKYCFields!.mobileNumber,
                     ),
                     SizedBox(
                       height: 40,
@@ -204,10 +204,10 @@ class _AgentDetailMobileState extends State<AgentDetailMobile> {
                       onTap: () {
                         p('🔆 🔆 Refreshing clients .... ');
                         agentBloc.getAgentClients(
-                            agentId: widget.agent.agentId, refresh: true);
+                            agentId: widget.agent!.agentId, refresh: true);
                       },
                       child: AgentClientsWidget(
-                        agent: widget.agent,
+                        agent: widget.agent!,
                       ),
                     ),
                   ],
@@ -220,7 +220,7 @@ class _AgentDetailMobileState extends State<AgentDetailMobile> {
               child: Padding(
                 padding: const EdgeInsets.all(12.0),
                 child: RoundAvatar(
-                    path: getPath(),
+                    path: getPath()!,
                     radius: 100,
                     fromNetwork: weAreInProduction),
               ),
@@ -243,11 +243,11 @@ class _AgentDetailMobileState extends State<AgentDetailMobile> {
                   child: StreamBuilder<List<StellarAccountBag>>(
                       stream: agentBloc.balancesStream,
                       builder: (context, snapshot) {
-                        StellarAccountBag mBal;
+                        late StellarAccountBag mBal;
                         if (snapshot.hasData) {
-                          p('👽 👽 👽 👽 balances delivered via stream ... 👽 👽 👽 ${snapshot.data.length} record(s)');
+                          p('👽 👽 👽 👽 balances delivered via stream ... 👽 👽 👽 ${snapshot.data!.length} record(s)');
                           bags = snapshot.data;
-                          mBal = bags.last;
+                          mBal = bags!.last;
                         }
                         return Center(
                           child: BalancesScroller(

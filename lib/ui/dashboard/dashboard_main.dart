@@ -7,16 +7,16 @@ import 'dashboard_mobile.dart';
 import 'dashboard_tablet.dart';
 
 class DashboardMain extends StatefulWidget {
-  final Anchor user;
+  final Anchor? user;
 
-  const DashboardMain({Key key, this.user}) : super(key: key);
+  const DashboardMain({Key? key, this.user}) : super(key: key);
   @override
   _DashboardMainState createState() => _DashboardMainState();
 }
 
 class _DashboardMainState extends State<DashboardMain>
     with SingleTickerProviderStateMixin {
-  AnimationController _controller;
+  late AnimationController _controller;
   var isBusy = false;
 
   @override

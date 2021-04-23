@@ -8,8 +8,8 @@ class AccountBalancesMobile extends StatefulWidget {
 
 class _AccountBalancesMobileState extends State<AccountBalancesMobile>
     with SingleTickerProviderStateMixin {
-  AnimationController _controller;
-  List<Balance> _balances;
+  late AnimationController _controller;
+  List<Balance>? _balances;
 
   @override
   void initState() {

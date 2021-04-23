@@ -10,16 +10,16 @@ import 'package:money_library_2021/util/util.dart';
 import 'package:page_transition/page_transition.dart';
 
 class AnchorBalancesMobile extends StatefulWidget {
-  final List<Balance> balances;
+  final List<Balance>? balances;
 
-  const AnchorBalancesMobile({Key key, this.balances}) : super(key: key);
+  const AnchorBalancesMobile({Key? key, this.balances}) : super(key: key);
   @override
   _AnchorBalancesMobileState createState() => _AnchorBalancesMobileState();
 }
 
 class _AnchorBalancesMobileState extends State<AnchorBalancesMobile>
     with SingleTickerProviderStateMixin {
-  AnimationController _controller;
+  late AnimationController _controller;
   List<Balance> _balances = [];
   bool busy = false;
 
@@ -31,7 +31,7 @@ class _AnchorBalancesMobileState extends State<AnchorBalancesMobile>
     if (widget.balances == null) {
       _getData();
     } else {
-      _filterBalances(widget.balances);
+      _filterBalances(widget.balances!);
     }
   }
 
@@ -44,7 +44,7 @@ class _AnchorBalancesMobileState extends State<AnchorBalancesMobile>
     });
   }
 
-  Anchor anchor;
+  Anchor? anchor;
   void _getAnchor() async {
     anchor = await Prefs.getAnchor();
     setState(() {});
@@ -59,7 +59,7 @@ class _AnchorBalancesMobileState extends State<AnchorBalancesMobile>
           alignment: Alignment.centerRight,
           duration: Duration(seconds: 1),
           child: AccountTransactionsMobile(
-            accountId: anchor.distributionStellarAccount.accountId,
+            accountId: anchor!.distributionStellarAccount!.accountId,
           ),
         ));
   }
@@ -107,7 +107,7 @@ class _AnchorBalancesMobileState extends State<AnchorBalancesMobile>
                     height: 16,
                   ),
                   Text(
-                    anchor == null ? "Loading..." : anchor.name,
+                    anchor == null ? "Loading..." : anchor!.name!,
                     style: Styles.blackBoldMedium,
                   ),
                   SizedBox(
@@ -161,13 +161,13 @@ class _AnchorBalancesMobileState extends State<AnchorBalancesMobile>
                                     Text(
                                       bal.assetCode == null
                                           ? "XLM"
-                                          : bal.assetCode,
+                                          : bal.assetCode!,
                                       style: Styles.blackBoldMedium,
                                     ),
                                     SizedBox(
                                       width: 8,
                                     ),
-                                    Text(bal.balance,
+                                    Text(bal.balance!,
                                         style: Styles.blackBoldSmall),
                                   ],
                                 ),
@@ -185,7 +185,7 @@ class _AnchorBalancesMobileState extends State<AnchorBalancesMobile>
                                       child: Text(
                                         bal.assetIssuer == null
                                             ? ""
-                                            : bal.assetIssuer,
+                                            : bal.assetIssuer!,
                                         style: Styles.greyLabelTiny,
                                       ),
                                     ),

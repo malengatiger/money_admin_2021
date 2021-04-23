@@ -25,17 +25,17 @@ class FundDistributionMobile extends StatefulWidget {
 class _FundDistributionMobileState extends State<FundDistributionMobile>
     with SingleTickerProviderStateMixin
     implements CurrencyDropDownListener {
-  AnimationController _controller;
+  late AnimationController _controller;
   bool busy = false;
-  GoogleOAuth2Client client;
-  OAuth2Helper oauth2Helper;
+  GoogleOAuth2Client? client;
+  OAuth2Helper? oauth2Helper;
   var url = 'https://secure.stitch.money/connect/authorize';
   var clientId = 'test-3e463858-6832-49f3-a598-b2e4a9e14113';
-  String paymentRequestResponse;
-  String lastTransaction;
-  Animation animation;
-  StreamSubscription _sub;
-  Anchor anchor;
+  String? paymentRequestResponse;
+  String? lastTransaction;
+  Animation? animation;
+  late StreamSubscription _sub;
+  Anchor? anchor;
 
   @override
   void initState() {
@@ -47,8 +47,8 @@ class _FundDistributionMobileState extends State<FundDistributionMobile>
 
   static const mm = 'FundDistribution: 🌺 🌺 🌺 ';
   var _key = GlobalKey<ScaffoldState>();
-  String authCode;
-  String paymentRequestURL;
+  String? authCode;
+  String? paymentRequestURL;
   var textController = TextEditingController();
 
   @override
@@ -93,8 +93,8 @@ class _FundDistributionMobileState extends State<FundDistributionMobile>
   }
 
   void _getCurrency() {
-    if (anchor.anchorCurrencyCode == null) anchor.anchorCurrencyCode = "ZAR";
-    if (anchor.assetCode == null) anchor.assetCode = "ZARK";
+    if (anchor!.anchorCurrencyCode == null) anchor!.anchorCurrencyCode = "ZAR";
+    if (anchor!.assetCode == null) anchor!.assetCode = "ZARK";
   }
 
   void _getPaymentRequestURL() async {
@@ -103,21 +103,21 @@ class _FundDistributionMobileState extends State<FundDistributionMobile>
       busy = true;
     });
     try {
-      Map<String, dynamic> stitchResponseJSON = await NetUtil.get(
+      Map<String, dynamic> stitchResponseJSON = await (NetUtil.get(
           apiRoute:
-              'createPaymentRequest?amount=$amount&currency=${anchor.anchorCurrencyCode}&reference=${referenceController.text}');
+              'createPaymentRequest?amount=$amount&currency=${anchor!.anchorCurrencyCode}&reference=${referenceController.text}') as FutureOr<Map<String, dynamic>>);
       StitchResponse stitchResponse =
           StitchResponse.fromJson(stitchResponseJSON);
 
       if (stitchResponse.errors == null) {
-        paymentRequestURL = stitchResponse.paymentRequest.url;
-        paymentRequestURL.trimLeft();
-        paymentRequestURL.trimRight();
+        paymentRequestURL = stitchResponse.paymentRequest!.url;
+        paymentRequestURL!.trimLeft();
+        paymentRequestURL!.trimRight();
         p('🔑 🔑 🔑 🔑 payment request generated : 🔑 🔑 🔑 🔑  url to send to backend: $paymentRequestURL');
         startBrowser();
       } else {
         StringBuffer buffer = StringBuffer();
-        stitchResponse.errors.forEach((element) {
+        stitchResponse.errors!.forEach((element) {
           buffer.writeln(element.toJson());
         });
         AppSnackBar.showErrorSnackBar(
@@ -139,15 +139,15 @@ class _FundDistributionMobileState extends State<FundDistributionMobile>
     setState(() {
       busy = true;
     });
-    if (await canLaunch(paymentRequestURL)) {
-      await launch(paymentRequestURL);
+    if (await canLaunch(paymentRequestURL!)) {
+      await launch(paymentRequestURL!);
       p('🔆 🔆 🔆 🔆 🔵 🔵 🔵 🔵 🔵 🔵  browser launched with $paymentRequestURL 🔵 🔵');
     } else {
       throw '🔆 🔆  Could not launch $paymentRequestURL';
     }
   }
 
-  String paymentStatus, paymentId;
+  String? paymentStatus, paymentId;
 
   var amtController = TextEditingController(text: "0.00");
   var referenceController = TextEditingController(
@@ -162,7 +162,7 @@ class _FundDistributionMobileState extends State<FundDistributionMobile>
       busy = true;
     });
     List<dynamic> list =
-        await NetUtil.get(apiRoute: 'fundDistributionAccount?amount=$amount');
+        await (NetUtil.get(apiRoute: 'fundDistributionAccount?amount=$amount') as FutureOr<List<dynamic>>);
     balances.clear();
     list.forEach((element) {
       balances.add(Balance.fromJson(element));
@@ -183,17 +183,17 @@ class _FundDistributionMobileState extends State<FundDistributionMobile>
   }
 
   String result = "";
-  StellarAccountBag bag;
+  StellarAccountBag? bag;
 
   _getDistributionAccountBalances() async {
     setState(() {
       isBusy = true;
     });
 
-    p("$mm 🔵 🔵 🔵 🔵 🔵 🔵 _getDistributionAccountBalances: Anchor: ${anchor.toJson()}");
+    p("$mm 🔵 🔵 🔵 🔵 🔵 🔵 _getDistributionAccountBalances: Anchor: ${anchor!.toJson()}");
     bag = await agentBloc.getBalances(
-        accountId: anchor.distributionStellarAccount.accountId, refresh: true);
-    p("$mm 🔵 🔵 🔵 🔵 🔵 🔵 _getDistributionAccountBalances: Bag: ${bag.toJson()}");
+        accountId: anchor!.distributionStellarAccount!.accountId, refresh: true);
+    p("$mm 🔵 🔵 🔵 🔵 🔵 🔵 _getDistributionAccountBalances: Bag: ${bag!.toJson()}");
     setState(() {
       isBusy = false;
     });
@@ -254,7 +254,7 @@ class _FundDistributionMobileState extends State<FundDistributionMobile>
               child: Column(
                 children: <Widget>[
                   Text(
-                    anchor == null ? '' : anchor.name,
+                    anchor == null ? '' : anchor!.name!,
                     style: Styles.blackBoldMedium,
                   ),
                   SizedBox(
@@ -263,7 +263,7 @@ class _FundDistributionMobileState extends State<FundDistributionMobile>
                   Padding(
                     padding: const EdgeInsets.only(left: 48.0, right: 48),
                     child: Text(
-                      bag == null ? 'Assets' : bag.accountId,
+                      bag == null ? 'Assets' : bag!.accountId!,
                       style: Styles.greyLabelTiny,
                     ),
                   ),
@@ -297,7 +297,7 @@ class _FundDistributionMobileState extends State<FundDistributionMobile>
                     child: Row(
                       children: [
                         Text(
-                          anchor == null ? "" : anchor.anchorCurrencyCode,
+                          anchor == null ? "" : anchor!.anchorCurrencyCode!,
                           style: Styles.blackBoldLarge,
                         ),
                         SizedBox(
@@ -311,7 +311,7 @@ class _FundDistributionMobileState extends State<FundDistributionMobile>
                           width: 12,
                         ),
                         Text(
-                          anchor == null ? "" : anchor.assetCode,
+                          anchor == null ? "" : anchor!.assetCode!,
                           style: Styles.blackBoldLarge,
                         ),
                       ],
@@ -368,7 +368,7 @@ class _FundDistributionMobileState extends State<FundDistributionMobile>
                   lastTransaction == null
                       ? Container()
                       : Text(
-                          lastTransaction,
+                          lastTransaction!,
                           style: Styles.blackSmall,
                         ),
                 ],
@@ -387,7 +387,7 @@ class _FundDistributionMobileState extends State<FundDistributionMobile>
                   decoration:
                       BoxDecoration(boxShadow: customShadow, color: baseColor),
                   child: BalancesScroller(
-                    bag: bag,
+                    bag: bag!,
                     direction: Axis.horizontal,
                   ),
                 ),
@@ -400,12 +400,12 @@ class _FundDistributionMobileState extends State<FundDistributionMobile>
   }
 
   @override
-  onChanged(Balance value) {
-    p('MobileFunder: 💚 💚 balance selected ${value.assetCode} ${value.balance}');
+  onChanged(Balance? value) {
+    p('MobileFunder: 💚 💚 balance selected ${value!.assetCode} ${value.balance}');
     setState(() {});
   }
 
-  double amount;
+  double? amount;
   var desc =
       'This page facilitates the funding of an Anchor \'s distribution account. '
       'It allows the administrator to transfer funds from a bank account in fiat currency and creates equivalent StableCoin in the distribution account';

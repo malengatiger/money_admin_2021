@@ -11,23 +11,23 @@ import 'package:page_transition/page_transition.dart';
 import '../login.dart';
 
 class IntroMobile extends StatefulWidget {
-  final AnchorUser user;
-  IntroMobile({Key key, this.user}) : super(key: key);
+  final AnchorUser? user;
+  IntroMobile({Key? key, this.user}) : super(key: key);
   @override
   _IntroMobileState createState() => _IntroMobileState();
 }
 
 class _IntroMobileState extends State<IntroMobile>
     with SingleTickerProviderStateMixin {
-  AnimationController _controller;
-  AnchorUser user;
+  late AnimationController _controller;
+  AnchorUser? user;
 
   var lorem =
       'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed ac sagittis lectus. Aliquam dictum elementum massa, '
       'eget mollis elit rhoncus ut.';
 
   var mList = <PageViewModel>[];
-  Anchor _anchor;
+  Anchor? _anchor;
   void _buildPages(BuildContext context) {
     var page1 = PageViewModel(
       titleWidget: Text(
@@ -103,7 +103,7 @@ class _IntroMobileState extends State<IntroMobile>
       child: Scaffold(
         appBar: AppBar(
           title: Text(
-            _anchor == null ? 'Anchor loading ...' : _anchor.name,
+            _anchor == null ? 'Anchor loading ...' : _anchor!.name!,
             style: Styles.whiteSmall,
           ),
           bottom: PreferredSize(
@@ -124,7 +124,7 @@ class _IntroMobileState extends State<IntroMobile>
                         ],
                       )
                     : Text(
-                        '${user.firstName} ${user.lastName}',
+                        '${user!.firstName} ${user!.lastName}',
                         style: Styles.blackBoldSmall,
                       ),
                 SizedBox(

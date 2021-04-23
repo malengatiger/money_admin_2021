@@ -8,7 +8,7 @@ import 'package:money_library_2021/util/util.dart';
 
 class FakeImages {
   static List<Agent> agents = [];
-  static Anchor anchor;
+  static Anchor? anchor;
   static List<String> images = [];
   static const mm = '🔵 🔵 🔵 🔵 🔵 🔵 FakeImages: ';
 
@@ -28,7 +28,7 @@ class FakeImages {
       throw Exception('No anchor');
     }
     agents =
-        await agentBloc.getAgents(anchorId: anchor.anchorId, refresh: true);
+        await agentBloc.getAgents(anchorId: anchor!.anchorId, refresh: true);
   }
 
   static void _loadImages() {

@@ -55,7 +55,7 @@ class _LoginMobileState extends State<LoginMobile> implements SnackBarListener {
   }
 
   @override
-  onActionPressed(int action) {
+  onActionPressed(int? action) {
     // TODO: implement onActionPressed
     return null;
   }
@@ -70,14 +70,14 @@ class _LoginFormState extends State<LoginForm>
     with SingleTickerProviderStateMixin {
   TextEditingController emailCntr = TextEditingController();
   TextEditingController pswdCntr = TextEditingController();
-  AnimationController titleController;
-  Animation titleAnimation, btnAnimation;
+  late AnimationController titleController;
+  late Animation titleAnimation, btnAnimation;
 
   bool isBusy = false;
-  Animation<double> boxAnimation;
-  Animation<double> classificationAnimation;
-  Animation<Offset> pulseAnimation;
-  Animation<Offset> meanAnimation;
+  Animation<double>? boxAnimation;
+  Animation<double>? classificationAnimation;
+  Animation<Offset>? pulseAnimation;
+  Animation<Offset>? meanAnimation;
   @override
   void initState() {
     super.initState();
@@ -178,7 +178,7 @@ class _LoginFormState extends State<LoginForm>
                           height: 60,
                         ),
                         ScaleTransition(
-                          scale: titleAnimation,
+                          scale: titleAnimation as Animation<double>,
                           alignment: Alignment(0.0, 0.0),
                           child: GestureDetector(
                             onTap: () {
@@ -251,7 +251,7 @@ class _LoginFormState extends State<LoginForm>
                           height: 60,
                         ),
                         ScaleTransition(
-                          scale: btnAnimation,
+                          scale: btnAnimation as Animation<double>,
                           child: Container(
                             height: 60,
                             width: 300,

@@ -2,15 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:money_library_2021/models/anchor.dart';
 
 class IntroDesktop extends StatefulWidget {
-  final AnchorUser user;
-  IntroDesktop({Key key, this.user}) : super(key: key);
+  final AnchorUser? user;
+  IntroDesktop({Key? key, this.user}) : super(key: key);
   @override
   _IntroDesktopState createState() => _IntroDesktopState();
 }
 
 class _IntroDesktopState extends State<IntroDesktop>
     with SingleTickerProviderStateMixin {
-  AnimationController _controller;
+  late AnimationController _controller;
 
   @override
   void initState() {

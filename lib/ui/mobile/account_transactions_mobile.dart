@@ -8,9 +8,9 @@ import 'package:money_library_2021/util/image_handler/currency_icons.dart';
 import 'package:money_library_2021/util/util.dart';
 
 class AccountTransactionsMobile extends StatefulWidget {
-  final String accountId;
+  final String? accountId;
 
-  const AccountTransactionsMobile({Key key, this.accountId}) : super(key: key);
+  const AccountTransactionsMobile({Key? key, this.accountId}) : super(key: key);
   @override
   _AccountTransactionsMobileState createState() =>
       _AccountTransactionsMobileState();
@@ -18,10 +18,10 @@ class AccountTransactionsMobile extends StatefulWidget {
 
 class _AccountTransactionsMobileState extends State<AccountTransactionsMobile>
     with SingleTickerProviderStateMixin {
-  AnimationController _controller;
+  late AnimationController _controller;
   List<PaymentDTO> payments = [];
-  StellarAccountBag stellarAccountBag;
-  bool busy;
+  StellarAccountBag? stellarAccountBag;
+  late bool busy;
 
   @override
   void initState() {
@@ -35,9 +35,9 @@ class _AccountTransactionsMobileState extends State<AccountTransactionsMobile>
     setState(() {
       busy = true;
     });
-    payments = await NetUtil.getAccountPayments(widget.accountId);
+    payments = await NetUtil.getAccountPayments(widget.accountId!);
     stellarAccountBag = await NetUtil.getAccountBalances(widget.accountId);
-    p('🌼 🌼 🌼 Payments found: ${payments.length} balances: ${stellarAccountBag.balances.length}');
+    p('🌼 🌼 🌼 Payments found: ${payments.length} balances: ${stellarAccountBag!.balances!.length}');
     setState(() {
       busy = false;
     });
@@ -91,7 +91,7 @@ class _AccountTransactionsMobileState extends State<AccountTransactionsMobile>
                     child: Row(
                       children: [
                         Text(
-                          '${stellarAccountBag == null ? "" : '${stellarAccountBag.balances.length}'}',
+                          '${stellarAccountBag == null ? "" : '${stellarAccountBag!.balances!.length}'}',
                           style: Styles.tealBoldMedium,
                         ),
                         SizedBox(
@@ -111,10 +111,10 @@ class _AccountTransactionsMobileState extends State<AccountTransactionsMobile>
                       child: ListView.builder(
                           itemCount: stellarAccountBag == null
                               ? 0
-                              : stellarAccountBag.balances.length,
+                              : stellarAccountBag!.balances!.length,
                           itemBuilder: (context, index) {
                             var bal =
-                                stellarAccountBag.balances.elementAt(index);
+                                stellarAccountBag!.balances!.elementAt(index);
                             return Card(
                               elevation: 1,
                               child: ListTile(
@@ -128,14 +128,14 @@ class _AccountTransactionsMobileState extends State<AccountTransactionsMobile>
                                     Text(
                                       bal.assetCode == null
                                           ? "XLM"
-                                          : bal.assetCode,
+                                          : bal.assetCode!,
                                       style: Styles.blackBoldSmall,
                                     ),
                                     SizedBox(
                                       width: 8,
                                     ),
                                     Text(
-                                      getFormattedAmount(bal.balance, context),
+                                      getFormattedAmount(bal.balance!, context),
                                       style: Styles.blackBoldSmall,
                                     )
                                   ],
@@ -186,7 +186,7 @@ class _AccountTransactionsMobileState extends State<AccountTransactionsMobile>
                                         SizedBox(
                                           width: 40,
                                           child: Text(
-                                            pay.asset_code,
+                                            pay.asset_code!,
                                             style: Styles.blackBoldSmall,
                                           ),
                                         ),
@@ -195,7 +195,7 @@ class _AccountTransactionsMobileState extends State<AccountTransactionsMobile>
                                         ),
                                         Text(
                                           getFormattedAmount(
-                                              pay.amount, context),
+                                              pay.amount!, context),
                                           style: Styles.tealBoldMedium,
                                         ),
                                         Row(
@@ -231,7 +231,7 @@ class _AccountTransactionsMobileState extends State<AccountTransactionsMobile>
                                         Flexible(
                                           fit: FlexFit.tight,
                                           child: Text(
-                                            pay.from,
+                                            pay.from!,
                                             style: Styles.blackTiny,
                                           ),
                                         )
@@ -255,7 +255,7 @@ class _AccountTransactionsMobileState extends State<AccountTransactionsMobile>
                                         Flexible(
                                           fit: FlexFit.loose,
                                           child: Text(
-                                            pay.to,
+                                            pay.to!,
                                             style: Styles.blackTiny,
                                           ),
                                         )
@@ -278,7 +278,7 @@ class _AccountTransactionsMobileState extends State<AccountTransactionsMobile>
                                         ),
                                         Text(
                                           getFormattedDateShortWithTime(
-                                              pay.created_at, context),
+                                              pay.created_at!, context),
                                           style: Styles.blackBoldSmall,
                                         )
                                       ],

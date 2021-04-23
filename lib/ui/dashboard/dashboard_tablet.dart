@@ -7,7 +7,7 @@ class DashboardTablet extends StatefulWidget {
 
 class _DashboardTabletState extends State<DashboardTablet>
     with SingleTickerProviderStateMixin {
-  AnimationController _controller;
+  AnimationController? _controller;
   // var isBusy = false;
   // var _projects = <Project>[];
   // var _users = <mon.User>[];

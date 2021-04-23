@@ -5,9 +5,9 @@ import 'package:responsive_builder/responsive_builder.dart';
 import 'mobile/mobile_agent_detail.dart';
 
 class AgentDetail extends StatefulWidget {
-  final Agent agent;
+  final Agent? agent;
 
-  const AgentDetail({Key key, this.agent}) : super(key: key);
+  const AgentDetail({Key? key, this.agent}) : super(key: key);
   @override
   _AgentDetailState createState() => _AgentDetailState();
 }

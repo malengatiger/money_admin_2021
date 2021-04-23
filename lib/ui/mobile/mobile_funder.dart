@@ -12,7 +12,7 @@ import 'package:money_library_2021/widgets/balances_scroller.dart';
 import 'package:money_library_2021/widgets/currency_dropdown.dart';
 
 class AgentFunderMobile extends StatefulWidget {
-  final Agent agent;
+  final Agent? agent;
 
   const AgentFunderMobile(this.agent);
   @override
@@ -22,14 +22,14 @@ class AgentFunderMobile extends StatefulWidget {
 class _AgentFunderMobileState extends State<AgentFunderMobile>
     with SingleTickerProviderStateMixin
     implements CurrencyDropDownListener {
-  AnimationController controller;
-  Animation animation;
+  late AnimationController controller;
+  Animation? animation;
   bool isBusy = false;
-  Balance _selectedBalance;
+  Balance? _selectedBalance;
   var _key = GlobalKey<ScaffoldState>();
   var textController = TextEditingController();
 
-  String lastTransaction;
+  String? lastTransaction;
 
   @override
   void initState() {
@@ -39,14 +39,14 @@ class _AgentFunderMobileState extends State<AgentFunderMobile>
     _getBalances();
   }
 
-  StellarAccountBag bag;
+  StellarAccountBag? bag;
   _getBalances() async {
     setState(() {
       isBusy = true;
     });
     bag = await agentBloc.getBalances(
-        accountId: widget.agent.stellarAccountId, refresh: true);
-    p("🔵 🔵 🔵 🔵 🔵 _AgentFunderMobileState: 🔵 getBalances Balances: ${bag.toJson()}");
+        accountId: widget.agent!.stellarAccountId, refresh: true);
+    p("🔵 🔵 🔵 🔵 🔵 _AgentFunderMobileState: 🔵 getBalances Balances: ${bag!.toJson()}");
     setState(() {
       isBusy = false;
     });
@@ -67,7 +67,7 @@ class _AgentFunderMobileState extends State<AgentFunderMobile>
       return;
     }
 
-    p('MobileFunder: 🍊 🍊 🍊 send $amount to agent: 💚 ${widget.agent.toJson()} ');
+    p('MobileFunder: 🍊 🍊 🍊 send $amount to agent: 💚 ${widget.agent!.toJson()} ');
     setState(() {
       isBusy = true;
       lastTransaction = null;
@@ -76,8 +76,8 @@ class _AgentFunderMobileState extends State<AgentFunderMobile>
       //todo - hide keyboard
       bag = await agentBloc.sendMoneyToAgent(
           amount: amount.toString(),
-          agent: widget.agent,
-          assetCode: _selectedBalance.assetCode);
+          agent: widget.agent!,
+          assetCode: _selectedBalance!.assetCode!);
     } catch (e) {
       p(e);
       AppSnackBar.showErrorSnackBar(
@@ -86,7 +86,7 @@ class _AgentFunderMobileState extends State<AgentFunderMobile>
     setState(() {
       isBusy = false;
       textController.text = '';
-      lastTransaction = "Payment of ${_selectedBalance.assetCode} $amount  "
+      lastTransaction = "Payment of ${_selectedBalance!.assetCode} $amount  "
           "at ${getFormattedDateHour(DateTime.now().toIso8601String())}";
       amount = null;
     });
@@ -97,7 +97,7 @@ class _AgentFunderMobileState extends State<AgentFunderMobile>
       decoration: BoxDecoration(
           boxShadow: customShadow, color: baseColor, shape: BoxShape.circle),
       child: Image.asset(
-          CurrencyIcons.getCurrencyImagePath(_selectedBalance.assetCode),
+          CurrencyIcons.getCurrencyImagePath(_selectedBalance!.assetCode),
           height: 48,
           width: 48),
     );
@@ -134,7 +134,7 @@ class _AgentFunderMobileState extends State<AgentFunderMobile>
                   Text(
                     widget.agent == null
                         ? ''
-                        : widget.agent.personalKYCFields.getFullName(),
+                        : widget.agent!.personalKYCFields!.getFullName(),
                     style: Styles.blackBoldMedium,
                   ),
                 ],
@@ -205,7 +205,7 @@ class _AgentFunderMobileState extends State<AgentFunderMobile>
                   lastTransaction == null
                       ? Container()
                       : Text(
-                          lastTransaction,
+                          lastTransaction!,
                           style: Styles.blackSmall,
                         ),
                 ],
@@ -224,7 +224,7 @@ class _AgentFunderMobileState extends State<AgentFunderMobile>
                   decoration:
                       BoxDecoration(boxShadow: customShadow, color: baseColor),
                   child: BalancesScroller(
-                    bag: bag,
+                    bag: bag!,
                     direction: Axis.horizontal,
                   ),
                 ),
@@ -240,7 +240,7 @@ class _AgentFunderMobileState extends State<AgentFunderMobile>
                     child: Row(
                       children: <Widget>[
                         CurrencyDropDown(
-                          bag: bag,
+                          bag: bag!,
                           listener: this,
                           showXLM: false,
                         ),
@@ -258,13 +258,13 @@ class _AgentFunderMobileState extends State<AgentFunderMobile>
   }
 
   @override
-  onChanged(Balance value) {
+  onChanged(Balance? value) {
     _selectedBalance = value;
-    p('MobileFunder: 💚 💚 balance selected ${value.assetCode} ${value.balance}');
+    p('MobileFunder: 💚 💚 balance selected ${value!.assetCode} ${value.balance}');
     setState(() {});
   }
 
-  double amount;
+  double? amount;
   void _onAmountChanged(String value) {
     p('on amount changed: $value');
     amount = double.parse(value);
