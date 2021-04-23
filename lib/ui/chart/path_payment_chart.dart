@@ -70,28 +70,28 @@ class _PathPaymentChartState extends State<PathPaymentChart>
 
     data.clear();
     splayTreeMap.forEach((key, value) {
-      p('🔵 🔵 🔵 🔵 🔵 🔵 splayTreeMap Key: $key value: $value');
+      p('PathPaymentChart: 🔵 🔵 🔵 🔵 🔵 🔵 splayTreeMap Key: $key value: $value');
       var mCount = value[key];
       data.add(_PaymentData('$key', double.parse('$mCount')));
     });
-    data.add(_PaymentData('18', double.parse('24.0')));
-    data.add(_PaymentData('19', double.parse('16.0')));
+    data.add(_PaymentData('18', double.parse('88.0')));
+    data.add(_PaymentData('19', double.parse('56.0')));
     data.add(_PaymentData('20', double.parse('16.0')));
     data.add(_PaymentData('21', double.parse('26.0')));
     data.add(_PaymentData('22', double.parse('30.0')));
-    data.add(_PaymentData('23', double.parse('24.0')));
-    data.add(_PaymentData('24', double.parse('25.0')));
-    data.add(_PaymentData('25', double.parse('12.0')));
+    data.add(_PaymentData('23', double.parse('48.0')));
+    data.add(_PaymentData('24', double.parse('54.0')));
+    data.add(_PaymentData('25', double.parse('68.0')));
     data.add(_PaymentData('26', double.parse('26.0')));
-    data.add(_PaymentData('27', double.parse('25.0')));
+    data.add(_PaymentData('27', double.parse('89.0')));
     data.add(_PaymentData('28', double.parse('28.0')));
-    data.add(_PaymentData('29', double.parse('24.0')));
-    data.add(_PaymentData('30', double.parse('22.0')));
-    data.add(_PaymentData('31', double.parse('20.0')));
-    data.add(_PaymentData('32', double.parse('16.0')));
+    data.add(_PaymentData('29', double.parse('44.0')));
+    data.add(_PaymentData('30', double.parse('44.0')));
+    data.add(_PaymentData('31', double.parse('66.0')));
+    data.add(_PaymentData('32', double.parse('77.0')));
     data.add(_PaymentData('33', double.parse('46.0')));
     data.add(_PaymentData('34', double.parse('40.0')));
-    data.add(_PaymentData('35', double.parse('36.0')));
+    data.add(_PaymentData('35', double.parse('66.0')));
     // data.forEach((element) {
     //   p('🔵 🔵 🔵 👽 👽 ${element.toString()}');
     // });
@@ -125,7 +125,7 @@ class _PathPaymentChartState extends State<PathPaymentChart>
                   primaryXAxis: CategoryAxis(),
                   // Chart title
                   title: ChartTitle(
-                      text: 'Daily Payments', textStyle: Styles.blackBoldSmall),
+                      text: 'Path Payments', textStyle: Styles.blackBoldSmall),
                   // Enable legend
                   legend: Legend(isVisible: true),
                   // Enable tooltip
@@ -136,7 +136,7 @@ class _PathPaymentChartState extends State<PathPaymentChart>
                         xValueMapper: (_PaymentData sales, _) => sales.day,
                         yValueMapper: (_PaymentData sales, _) => sales.payments,
                         name: '',
-                        color: Colors.purple,
+                        color: Colors.indigo,
                         markerSettings: MarkerSettings(isVisible: true),
                         // Enable data label
                         dataLabelSettings: DataLabelSettings(isVisible: true))

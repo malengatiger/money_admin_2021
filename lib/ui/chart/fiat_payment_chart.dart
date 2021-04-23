@@ -70,7 +70,7 @@ class _FiatPaymentChartState extends State<FiatPaymentChart>
 
     data.clear();
     splayTreeMap.forEach((key, value) {
-      p('🔵 🔵 🔵 🔵 🔵 🔵 splayTreeMap Key: $key value: $value');
+      p('FiatPaymentChart: 🔵 🔵 🔵 🔵 🔵 🔵 splayTreeMap Key: $key value: $value');
       var mCount = value[key];
       data.add(_PaymentData('$key', double.parse('$mCount')));
     });

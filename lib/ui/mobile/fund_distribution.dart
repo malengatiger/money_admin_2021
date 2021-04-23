@@ -15,7 +15,6 @@ import 'package:money_library_2021/widgets/currency_dropdown.dart';
 import 'package:oauth2_client/google_oauth2_client.dart';
 import 'package:oauth2_client/oauth2_helper.dart';
 import 'package:page_transition/page_transition.dart';
-import 'package:uni_links/uni_links.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class FundDistributionMobile extends StatefulWidget {
@@ -62,29 +61,29 @@ class _FundDistributionMobileState extends State<FundDistributionMobile>
 
   Future<Null> initUniLinks() async {
     p('$mm .............. listening to uniLinks stream');
-    _sub = getLinksStream().listen((String link) {
-      p('$mm listen fired: $link');
-    }, onError: (err) {
-      p(err);
-    });
-    _sub.onData((data) {
-      p('$mm LinksStream subscription onData fired: $data');
-      String mData = data as String;
-      int i = mData.indexOf("=");
-      int j = mData.indexOf("&");
-      paymentId = mData.substring(i + 1, j);
-      p('$mm paymentId: $paymentId $mm');
-      //
-      var index = mData.lastIndexOf('=');
-      if (index > 0) {
-        paymentStatus = mData.substring(index + 1);
-        p('$mm paymentStatus: $paymentStatus $mm');
-      }
-      _startFunding();
-    });
-    _sub.onDone(() {
-      p('$mm sub onDone ....');
-    });
+    // _sub = getLinksStream().listen((String link) {
+    //   p('$mm listen fired: $link');
+    // }, onError: (err) {
+    //   p(err);
+    // });
+    // _sub.onData((data) {
+    //   p('$mm LinksStream subscription onData fired: $data');
+    //   String mData = data as String;
+    //   int i = mData.indexOf("=");
+    //   int j = mData.indexOf("&");
+    //   paymentId = mData.substring(i + 1, j);
+    //   p('$mm paymentId: $paymentId $mm');
+    //   //
+    //   var index = mData.lastIndexOf('=');
+    //   if (index > 0) {
+    //     paymentStatus = mData.substring(index + 1);
+    //     p('$mm paymentStatus: $paymentStatus $mm');
+    //   }
+    //   _startFunding();
+    // });
+    // _sub.onDone(() {
+    //   p('$mm sub onDone ....');
+    // });
   }
 
   void _getBasicData() async {
