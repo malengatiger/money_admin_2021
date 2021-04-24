@@ -99,75 +99,72 @@ class _IntroMobileState extends State<IntroMobile>
     if (mList.isEmpty) {
       _buildPages(context);
     }
-    return SafeArea(
-      child: Scaffold(
-        appBar: AppBar(
-          title: Text(
-            _anchor == null ? 'Anchor loading ...' : _anchor!.name!,
-            style: Styles.whiteSmall,
-          ),
-          bottom: PreferredSize(
-            child: Column(
-              children: [
-                user == null
-                    ? Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          TextButton(
-                            onPressed: _navigateToSignIn,
-                            child:
-                                Text('Sign In', style: Styles.blackBoldSmall),
-                          ),
-                          SizedBox(
-                            width: 24,
-                          ),
-                        ],
-                      )
-                    : Text(
-                        '${user!.firstName} ${user!.lastName}',
-                        style: Styles.blackBoldSmall,
-                      ),
-                SizedBox(
-                  height: 16,
-                )
-              ],
-            ),
-            preferredSize: Size.fromHeight(40),
-          ),
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(
+          _anchor == null ? 'Anchor loading ...' : _anchor!.name!,
+          style: Styles.whiteSmall,
         ),
-        body: Stack(
-          children: [
-            IntroductionScreen(
-              pages: mList,
-              onDone: () {
-                _navigateToDashboard(context);
-              },
-              onSkip: () {
-                _navigateToDashboard(context);
-              },
-              showSkipButton: false,
-              skip: const Icon(Icons.skip_next),
-              next: const Icon(Icons.arrow_forward),
-              done: user == null
-                  ? Container()
-                  : Text("Done",
-                      style: TextStyle(
-                        color: Theme.of(context).primaryColor,
-                        fontWeight: FontWeight.w600,
-                      )),
-              dotsDecorator: DotsDecorator(
-                size: const Size.square(10.0),
-                activeSize: const Size(20.0, 10.0),
-                activeColor: Theme.of(context).primaryColor,
-                color: Colors.black26,
-                spacing: const EdgeInsets.symmetric(horizontal: 3.0),
-                activeShape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(25.0),
-                ),
+        bottom: PreferredSize(
+          child: Column(
+            children: [
+              user == null
+                  ? Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        TextButton(
+                          onPressed: _navigateToSignIn,
+                          child: Text('Sign In', style: Styles.blackBoldSmall),
+                        ),
+                        SizedBox(
+                          width: 24,
+                        ),
+                      ],
+                    )
+                  : Text(
+                      '${user!.firstName} ${user!.lastName}',
+                      style: Styles.blackBoldSmall,
+                    ),
+              SizedBox(
+                height: 16,
+              )
+            ],
+          ),
+          preferredSize: Size.fromHeight(40),
+        ),
+      ),
+      body: Stack(
+        children: [
+          IntroductionScreen(
+            pages: mList,
+            onDone: () {
+              _navigateToDashboard(context);
+            },
+            onSkip: () {
+              _navigateToDashboard(context);
+            },
+            showSkipButton: false,
+            skip: const Icon(Icons.skip_next),
+            next: const Icon(Icons.arrow_forward),
+            done: user == null
+                ? Container()
+                : Text("Done",
+                    style: TextStyle(
+                      color: Theme.of(context).primaryColor,
+                      fontWeight: FontWeight.w600,
+                    )),
+            dotsDecorator: DotsDecorator(
+              size: const Size.square(10.0),
+              activeSize: const Size(20.0, 10.0),
+              activeColor: Theme.of(context).primaryColor,
+              color: Colors.black26,
+              spacing: const EdgeInsets.symmetric(horizontal: 3.0),
+              activeShape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(25.0),
               ),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

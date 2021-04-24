@@ -33,7 +33,7 @@ class _IntroMainState extends State<IntroMain> {
   }
 
   void _checkUser() async {
-    p('IntroMain: 🎽 🎽 🎽 Checking the user ....');
+    p('IntroMain: 🎽 🎽 🎽 Checking the user .... 🎽 🎽 🎽');
     setState(() {
       isBusy = true;
     });
@@ -59,19 +59,17 @@ class _IntroMainState extends State<IntroMain> {
   @override
   Widget build(BuildContext context) {
     return isBusy
-        ? SafeArea(
-            child: Scaffold(
-              appBar: AppBar(
-                title: Text('Loading User ..', style: Styles.whiteSmall),
-              ),
-              body: Center(
-                child: Container(
-                  width: 48,
-                  height: 48,
-                  child: CircularProgressIndicator(
-                    strokeWidth: 8,
-                    backgroundColor: Colors.deepPurple,
-                  ),
+        ? Scaffold(
+            appBar: AppBar(
+              title: Text('Loading User ..', style: Styles.whiteSmall),
+            ),
+            body: Center(
+              child: Container(
+                width: 48,
+                height: 48,
+                child: CircularProgressIndicator(
+                  strokeWidth: 8,
+                  backgroundColor: Colors.deepPurple,
                 ),
               ),
             ),

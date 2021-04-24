@@ -7,23 +7,29 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:introduction_screen/src/ui/intro_button.dart';
 import 'package:money_admin_2021/ui/intro/intro_mobile.dart';
 
 void main() {
-  testWidgets('Introduction screen test', (WidgetTester tester) async {
-    // Build our app and trigger a frame.
-    await tester.pumpWidget(IntroMobile());
-
-    // Verify that our counter starts at 0.
-    expect(find.text('0'), findsOneWidget);
-    expect(find.text('1'), findsNothing);
-
-    // Tap the '+' icon and trigger a frame.
-    await tester.tap(find.byIcon(Icons.add));
-    await tester.pump();
-
-    // Verify that our counter has incremented.
-    expect(find.text('0'), findsNothing);
-    expect(find.text('1'), findsOneWidget);
+  group('MoneyPlatform Widget Tests', () {
+    testWidgets('IntroMobile widget exists', (WidgetTester tester) async {
+      // Build the widget.
+      var intro = IntroMobile();
+      await tester.pumpWidget(MaterialApp(
+        home: SafeArea(child: intro),
+      ));
+      // Tap the add button.
+      var finder = find.byWidget(intro);
+      expect(finder, findsOneWidget);
+      var buttons = find.byType(IntroButton);
+      print('👽👽👽👽👽👽👽👽 buttons');
+      print(buttons);
+      await tester.tap(buttons.first);
+      await tester.pump();
+      await tester.tap(buttons.last);
+      await tester.pump();
+      print(
+          '🔵 🔵 🔵 👽👽👽👽 found and tapped the next and done buttons on IntroMobile');
+    });
   });
 }
