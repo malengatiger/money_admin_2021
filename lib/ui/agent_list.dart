@@ -33,7 +33,7 @@ class _AgentListState extends State<AgentList>
     _setProductionStatus();
     _setAnimation();
     _refresh(false);
-    _fakeImages();
+    //_fakeImages();
   }
 
   @override

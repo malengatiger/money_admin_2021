@@ -8,7 +8,8 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:money_admin_2021/ui/dashboard/dashboard_mobile.dart';
+import 'package:money_admin_2021/ui/agent_list.dart';
+import 'package:money_library_2021/widgets/round_number.dart';
 
 import 'mock.dart';
 
@@ -18,29 +19,26 @@ void main() {
     await Firebase.initializeApp();
   });
 
-  group('MoneyPlatform Widget Tests 2', () {
-    testWidgets('DashboardMobile widget exists', (WidgetTester tester) async {
-      var dashboard = DashboardMobile();
+  group('MoneyPlatform Widget Tests 3 🍐 🍐 🍐', () {
+    testWidgets('AgentList widget exists', (WidgetTester tester) async {
+      var agentList = AgentList();
       await tester.pumpWidget(MaterialApp(
-        home: SafeArea(child: dashboard),
+        home: SafeArea(child: agentList),
       ));
       // Tap the add button.
-      var finder = find.byWidget(dashboard);
+      var finder = find.byWidget(agentList);
       expect(finder, findsOneWidget);
       var buttons = find.byType(IconButton);
-      print('💛 💛 💛  dashboard iconButtons; there should be 4 iconButtons');
+      print('🍐🍐🍐  AgentList iconButtons; there should be 3 iconButtons');
       print(buttons);
-      expect(buttons.evaluate().length, 4);
+      expect(buttons.evaluate().length, 3);
 
-      var cards = find.byType(Card);
-      print('💛 💛 💛  dashboard cards; there should be 3 cards');
-      print(cards);
-      expect(cards.evaluate().length, 3);
-      // await tester.tap(cards.first);
-      // await tester.pump();
+      var numWidget = find.byType(RoundNumberWidget);
+      print('🍐🍐🍐  numWidget; there should be 1');
+      expect(numWidget, findsOneWidget);
 
       print(
-          '💛 💛 💛 💛 found and tapped the next and done cards on DashboardMobile');
+          '🍐🍐🍐 found AgentList OK 🍎 and checked that I have the required widgets 🍐🍐🍐');
     });
   });
 }
